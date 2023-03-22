@@ -8,6 +8,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { Search, Menu } from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 import { Stack } from "@mui/material";
+// import { NavLink } from "react-router-dom";
 
 const MyNav = (props) => {
   const { handleSignInWithGoogle, handleLogOut, userInfo } = props;
@@ -17,7 +18,7 @@ const MyNav = (props) => {
   }
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" sticky="top">
       <Container fluid>
         <Navbar.Brand href="/">FigureWorld</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
@@ -28,7 +29,7 @@ const MyNav = (props) => {
             navbarScroll
           >
             <Nav.Link href="/">Trang chủ</Nav.Link>
-            <Nav.Link href="#forum">Diễn đàn</Nav.Link>
+            <Nav.Link href="/forum">Diễn đàn</Nav.Link>
             <Form className="d-flex">
               <Form.Control
                 type="search"

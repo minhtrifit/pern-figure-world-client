@@ -3,19 +3,39 @@ import axios from "axios";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./config/Firebase";
+import { Routes, Route } from "react-router-dom";
 import "./App.scss";
 import MyNav from "./components/MyNav";
+import Home from "./pages/Home";
 
 function App() {
   const [user] = useAuthState(auth);
   const [userInfo, setUserInfo] = useState({});
+  const [productList, setProductList] = useState([]);
 
+  //==================== Function declair
   const userStatus = async (data) => {
-    await axios.post(`${process.env.REACT_APP_SERVER_API}/status`, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      await axios.post(`${process.env.REACT_APP_SERVER_API}/status`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getProductList = async () => {
+    try {
+      const rs = await axios.get(
+        `${process.env.REACT_APP_SERVER_API}/products`
+      );
+      const data = rs.data;
+      setProductList(data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //==================== User Auth
@@ -29,8 +49,12 @@ function App() {
     }
   }, [user]);
 
-  //==================== Event handling
+  //==================== API Calling
+  useEffect(() => {
+    getProductList();
+  }, []);
 
+  //==================== Event handling
   const handleSignInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider);
@@ -50,6 +74,9 @@ function App() {
         handleLogOut={handleLogOut}
         userInfo={userInfo}
       />
+      <Routes>
+        <Route path="/" element={<Home productList={productList} />} />
+      </Routes>
     </div>
   );
 }
