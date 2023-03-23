@@ -2,6 +2,8 @@ import { Grid, Box, Paper } from "@mui/material";
 import Banner from "../components/Banner/Banner";
 import HomeLeft from "../components/HomeLeft";
 import HomeRight from "../components/HomeRight";
+import MyContent from "../components/MyContent";
+import MyFooter from "../components/MyFooter";
 
 const Home = (props) => {
   const {
@@ -9,7 +11,9 @@ const Home = (props) => {
     productList,
     productListPerPage,
     handleChangeProductPag,
+    productListPageCount,
     productitleref,
+    handleViewProductDetail,
   } = props;
 
   return (
@@ -37,11 +41,15 @@ const Home = (props) => {
               productList={productList}
               productListPerPage={productListPerPage}
               handleChangeProductPag={handleChangeProductPag}
+              productListPageCount={productListPageCount}
               productitleref={productitleref}
+              handleViewProductDetail={handleViewProductDetail}
             />
           </Box>
         </Grid>
       </Grid>
+      <MyContent />
+      <MyFooter />
     </>
   );
 };

@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import "./ProductCard.scss";
 
 const ProductCard = (props) => {
-  const { product } = props;
+  const { product, handleViewProductDetail } = props;
   // console.log(product);
 
   return (
@@ -11,7 +11,14 @@ const ProductCard = (props) => {
       <div className="card">
         <img src={product.photo_url[0]} alt={product.name} />
         <div className="info">
-          <Button variant="primary">Xem chi tiết</Button>
+          <Button
+            variant="primary"
+            onClick={(e) => {
+              handleViewProductDetail(product.id);
+            }}
+          >
+            Xem chi tiết
+          </Button>
         </div>
       </div>
       <Stack>

@@ -3,10 +3,11 @@ import axios from "axios";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./config/Firebase";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import "./App.scss";
 import MyNav from "./components/MyNav";
 import Home from "./pages/Home";
+import Forum from "./pages/Forum";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -14,9 +15,12 @@ function App() {
   const [productList, setProductList] = useState([]);
 
   const [productListPerPage, setProductListPerPage] = useState([]);
+  const [productListPageCount, setProductListPageCount] = useState(0);
   const productPerPage = 6;
 
   const productitleref = useRef(null);
+
+  let navigate = useNavigate();
 
   //==================== Function declair
   const getRandomID = (min, max) => {
@@ -53,6 +57,10 @@ function App() {
     setProductListPerPage(list.slice(begin, end));
   };
 
+  const getPageCount = (length, value) => {
+    return Math.ceil(length / value);
+  };
+
   //==================== User Auth
   useEffect(() => {
     if (user) {
@@ -72,6 +80,7 @@ function App() {
   useEffect(() => {
     if (productList.length !== 0) {
       getProductListPerPage(productList, 1);
+      setProductListPageCount(getPageCount(productList.length, productPerPage));
       // console.log("Check from main: ", productList.length);
     }
   }, [productList]);
@@ -98,6 +107,10 @@ function App() {
     });
   };
 
+  const handleViewProductDetail = (id) => {
+    navigate(`product/${id}`);
+  };
+
   return (
     <div className="app">
       <MyNav
@@ -114,10 +127,13 @@ function App() {
               productList={productList}
               productListPerPage={productListPerPage}
               handleChangeProductPag={handleChangeProductPag}
+              productListPageCount={productListPageCount}
               productitleref={productitleref}
+              handleViewProductDetail={handleViewProductDetail}
             />
           }
         />
+        <Route path="/forum" element={<Forum />} />
       </Routes>
     </div>
   );

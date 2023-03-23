@@ -6,7 +6,9 @@ const HomeRight = (props) => {
     getRandomID,
     productListPerPage,
     handleChangeProductPag,
+    productListPageCount,
     productitleref,
+    handleViewProductDetail,
   } = props;
 
   if (productListPerPage.length !== 0) {
@@ -46,14 +48,17 @@ const HomeRight = (props) => {
                   justifyContent: "center",
                 }}
               >
-                <ProductCard product={product} />
+                <ProductCard
+                  product={product}
+                  handleViewProductDetail={handleViewProductDetail}
+                />
               </Grid>
             );
           })}
       </Grid>
       <Stack alignItems="center">
         <Pagination
-          count={4}
+          count={productListPageCount ? productListPageCount : 1}
           color="primary"
           onClick={(e) => {
             handleChangeProductPag(e.target.innerText, productitleref);
