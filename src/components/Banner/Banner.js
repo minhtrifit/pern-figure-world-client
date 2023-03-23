@@ -28,6 +28,9 @@ const Banner = () => {
         <SwiperSlide>
           <img alt="banner2" src="./banner/banner2.png" />
         </SwiperSlide>
+        <SwiperSlide>
+          <img alt="banner3" src="./banner/banner3.png" />
+        </SwiperSlide>
       </Swiper>
     </>
   );

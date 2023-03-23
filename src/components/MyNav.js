@@ -7,8 +7,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { Search, Menu } from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
-import { Stack } from "@mui/material";
-// import { NavLink } from "react-router-dom";
+import { Stack, Typography } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
 const MyNav = (props) => {
   const { handleSignInWithGoogle, handleLogOut, userInfo } = props;
@@ -28,8 +28,44 @@ const MyNav = (props) => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link href="/">Trang chủ</Nav.Link>
-            <Nav.Link href="/forum">Diễn đàn</Nav.Link>
+            <NavLink
+              to="/"
+              style={{
+                textDecoration: "none",
+                paddingRight: 20,
+              }}
+            >
+              <Typography
+                mt={1}
+                sx={{
+                  color: "gray",
+                  "&:hover": {
+                    color: "#000",
+                  },
+                }}
+              >
+                Trang chủ
+              </Typography>
+            </NavLink>
+            <NavLink
+              to="/forum"
+              style={{
+                textDecoration: "none",
+                paddingRight: 20,
+              }}
+            >
+              <Typography
+                mt={1}
+                sx={{
+                  color: "gray",
+                  "&:hover": {
+                    color: "#000",
+                  },
+                }}
+              >
+                Diễn đàn
+              </Typography>
+            </NavLink>
             <Form className="d-flex">
               <Form.Control
                 type="search"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -13,7 +13,16 @@ function App() {
   const [userInfo, setUserInfo] = useState({});
   const [productList, setProductList] = useState([]);
 
+  const [productListPerPage, setProductListPerPage] = useState([]);
+  const productPerPage = 6;
+
+  const productitleref = useRef(null);
+
   //==================== Function declair
+  const getRandomID = (min, max) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+  };
+
   const userStatus = async (data) => {
     try {
       await axios.post(`${process.env.REACT_APP_SERVER_API}/status`, data, {
@@ -38,6 +47,12 @@ function App() {
     }
   };
 
+  const getProductListPerPage = async (list, pag) => {
+    let begin = (pag - 1) * productPerPage;
+    let end = (pag - 1) * productPerPage + productPerPage;
+    setProductListPerPage(list.slice(begin, end));
+  };
+
   //==================== User Auth
   useEffect(() => {
     if (user) {
@@ -54,6 +69,13 @@ function App() {
     getProductList();
   }, []);
 
+  useEffect(() => {
+    if (productList.length !== 0) {
+      getProductListPerPage(productList, 1);
+      // console.log("Check from main: ", productList.length);
+    }
+  }, [productList]);
+
   //==================== Event handling
   const handleSignInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
@@ -67,6 +89,15 @@ function App() {
     console.log("Log out successfully!");
   };
 
+  const handleChangeProductPag = (value, elementRef) => {
+    const pag = parseInt(value);
+    getProductListPerPage(productList, pag);
+    window.scrollTo({
+      top: elementRef.current.offsetTop - 90,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="app">
       <MyNav
@@ -75,7 +106,18 @@ function App() {
         userInfo={userInfo}
       />
       <Routes>
-        <Route path="/" element={<Home productList={productList} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              getRandomID={getRandomID}
+              productList={productList}
+              productListPerPage={productListPerPage}
+              handleChangeProductPag={handleChangeProductPag}
+              productitleref={productitleref}
+            />
+          }
+        />
       </Routes>
     </div>
   );

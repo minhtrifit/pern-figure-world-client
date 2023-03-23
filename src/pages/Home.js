@@ -4,27 +4,41 @@ import HomeLeft from "../components/HomeLeft";
 import HomeRight from "../components/HomeRight";
 
 const Home = (props) => {
-  const { productList } = props;
+  const {
+    getRandomID,
+    productList,
+    productListPerPage,
+    handleChangeProductPag,
+    productitleref,
+  } = props;
 
   return (
     <>
       <Banner />
       <Grid
         container
-        spacing={3}
-        mt={2}
-        mb={2}
+        spacing={1}
+        p={3}
+        mt={1}
+        mb={1}
         justifyContent="center"
         // alignItems="center"
+        columns={{ xs: 4, sm: 11 }}
       >
-        <Grid item xs={2}>
-          <Paper elevation={2}>
-            <HomeLeft productList={productList} />
+        <Grid item xs={2.5}>
+          <Paper elevation={1} sx={{ display: { xs: "none", sm: "block" } }}>
+            <HomeLeft getRandomID={getRandomID} productList={productList} />
           </Paper>
         </Grid>
-        <Grid item xs={8}>
-          <Box bgcolor="blue">
-            <HomeRight />
+        <Grid item xs={4} sm={8}>
+          <Box>
+            <HomeRight
+              getRandomID={getRandomID}
+              productList={productList}
+              productListPerPage={productListPerPage}
+              handleChangeProductPag={handleChangeProductPag}
+              productitleref={productitleref}
+            />
           </Box>
         </Grid>
       </Grid>

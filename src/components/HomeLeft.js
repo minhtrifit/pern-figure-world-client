@@ -1,5 +1,6 @@
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, List, ListItem } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { Pets } from "@mui/icons-material";
 
 const filterBySeries = (arr) => {
   let a = [];
@@ -13,51 +14,77 @@ const filterBySeries = (arr) => {
   return ans;
 };
 
+const style = {
+  width: "100%",
+  maxWidth: 360,
+  bgcolor: "background.paper",
+};
+
 const HomeLeft = (props) => {
-  const { productList } = props;
+  const { getRandomID, productList } = props;
   const filterSeriesList = filterBySeries(productList);
   //   console.log("Check from HomeLeft:", productList);
 
   return (
-    <Box p={3}>
-      <Typography variant="h6" fontWeight={500}>
+    <Box p={1}>
+      <Typography
+        variant="h6"
+        textAlign="center"
+        fontWeight={700}
+        color="#0d6efd"
+      >
         DANH MỤC SẢN PHẨM
       </Typography>
-      {filterSeriesList &&
-        filterSeriesList.map((item) => {
-          return (
-            <Box key={item}>
-              <Typography
-                sx={{
-                  fontSize: 14,
-                  paddingTop: 1,
-                  "&:hover": {
-                    color: "#000",
-                  },
-                }}
-              >
-                <NavLink
-                  to={`/series/${item}`}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  <Typography
-                    variant="p"
-                    sx={{
-                      color: "gray",
-                      "&:hover": {
-                        color: "#000",
-                      },
+      <List sx={style} component="nav" aria-label="mailbox folders">
+        {filterSeriesList &&
+          filterSeriesList.map((item, index) => {
+            if (index === filterSeriesList.length - 1) {
+              return (
+                <ListItem button key={getRandomID(1000, 99999)}>
+                  <Pets />
+                  <NavLink
+                    to={`/series/${item}`}
+                    style={{
+                      textDecoration: "none",
                     }}
                   >
-                    {item}
-                  </Typography>
-                </NavLink>
-              </Typography>
-            </Box>
-          );
-        })}
+                    <Typography
+                      variant="h6"
+                      fontSize={13}
+                      color="#000"
+                      padding={0.5}
+                      ml={1}
+                    >
+                      {item}
+                    </Typography>
+                  </NavLink>
+                </ListItem>
+              );
+            } else {
+              return (
+                <ListItem button divider key={item}>
+                  <Pets />
+                  <NavLink
+                    to={`/series/${item}`}
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      fontSize={13}
+                      color="#000"
+                      padding={0.5}
+                      ml={1}
+                    >
+                      {item}
+                    </Typography>
+                  </NavLink>
+                </ListItem>
+              );
+            }
+          })}
+      </List>
     </Box>
   );
 };
