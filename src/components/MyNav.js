@@ -13,12 +13,12 @@ import { NavLink } from "react-router-dom";
 const MyNav = (props) => {
   const { handleSignInWithGoogle, handleLogOut, userInfo } = props;
 
-  if (Object.keys(userInfo).length !== 0) {
-    console.log("Check from nav:", userInfo);
-  }
+  // if (Object.keys(userInfo).length !== 0) {
+  //   console.log("Check from nav:", userInfo);
+  // }
 
   return (
-    <Navbar bg="light" expand="lg" sticky="top">
+    <Navbar bg="light" expand="lg" /*sticky="top"*/>
       <Container fluid>
         <Navbar.Brand href="/">FigureWorld</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />

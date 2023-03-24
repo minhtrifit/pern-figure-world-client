@@ -3,11 +3,12 @@ import axios from "axios";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./config/Firebase";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.scss";
 import MyNav from "./components/MyNav";
 import Home from "./pages/Home";
 import Forum from "./pages/Forum";
+import Product from "./pages/Product";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -21,6 +22,7 @@ function App() {
   const productitleref = useRef(null);
 
   let navigate = useNavigate();
+  const myLocation = useLocation();
 
   //==================== Function declair
   const getRandomID = (min, max) => {
@@ -38,6 +40,18 @@ function App() {
       console.log(error);
     }
   };
+
+  // const getUserStatus = async (email) => {
+  //   try {
+  //     const rs = await axios.get(
+  //       `${process.env.REACT_APP_SERVER_API}/users/${email}`
+  //     );
+  //     const data = rs.data;
+  //     return data.data.status;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const getProductList = async () => {
     try {
@@ -63,12 +77,22 @@ function App() {
 
   //==================== User Auth
   useEffect(() => {
+    // If user login successfully
     if (user) {
       const { uid, displayName, email, photoURL } = user;
       setUserInfo({ uid, displayName, email, photoURL });
       const data = { uid, displayName, email, photoURL };
-      userStatus(data);
-      console.log("Login successfully!");
+
+      const temp = localStorage.getItem("userLogin");
+
+      // Change user status === true when first login (not change if refresh page)
+      if (temp === null) {
+        console.log("User first login");
+        userStatus(data);
+        localStorage.setItem("userLogin", true);
+      }
+
+      // console.log("Login successfully!");
     }
   }, [user]);
 
@@ -85,6 +109,17 @@ function App() {
     }
   }, [productList]);
 
+  //==================== Route handling
+
+  // Product view per page handle
+  useEffect(() => {
+    const { pathname } = myLocation;
+    if (pathname === "/") {
+      // console.log("Home page");
+      getProductListPerPage(productList, 1);
+    }
+  }, [myLocation, productList]);
+
   //==================== Event handling
   const handleSignInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
@@ -95,14 +130,16 @@ function App() {
     signOut(auth);
     userStatus(userInfo);
     setUserInfo("");
-    console.log("Log out successfully!");
+    localStorage.removeItem("userLogin");
+    // console.log("Log out successfully!");
   };
 
   const handleChangeProductPag = (value, elementRef) => {
     const pag = parseInt(value);
     getProductListPerPage(productList, pag);
     window.scrollTo({
-      top: elementRef.current.offsetTop - 90,
+      // top: elementRef.current.offsetTop - 90,
+      top: elementRef.current.offsetTop - 40,
       behavior: "smooth",
     });
   };
@@ -134,6 +171,10 @@ function App() {
           }
         />
         <Route path="/forum" element={<Forum />} />
+        <Route
+          path="/product/:id"
+          element={<Product productList={productList} userInfo={userInfo} />}
+        />
       </Routes>
     </div>
   );
