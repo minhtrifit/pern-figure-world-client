@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -7,8 +8,12 @@ import {
   Stack,
   Snackbar,
   Alert,
+  Tab,
+  Grid,
 } from "@mui/material";
-import { useState } from "react";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import {
   Button,
   ButtonGroup,
@@ -16,14 +21,16 @@ import {
   Form,
   InputGroup,
 } from "react-bootstrap";
+import { FiberManualRecord } from "@mui/icons-material";
 
 const ProductDetail = (props) => {
   const { targetProduct, userInfo } = props;
   const [cartAmount, setCartAmount] = useState(1);
   const [openLoginAlert, setOpenLoginAlert] = useState(false);
   const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+  const [tabValue, setTabValue] = useState("1");
 
-  //   console.log(targetProduct);
+  console.log(targetProduct);
 
   if (Object.keys(userInfo).length !== 0) {
     console.log("Check from ProductDetail:", userInfo);
@@ -50,12 +57,25 @@ const ProductDetail = (props) => {
     }
   };
 
+  const handleAddPost = () => {
+    // User not login
+    if (Object.keys(userInfo).length === 0) {
+      setOpenLoginAlert(true);
+    } else {
+      setOpenSuccessAlert(true);
+    }
+  };
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpenLoginAlert(false);
     setOpenSuccessAlert(false);
+  };
+
+  const handleChangeTab = (event, newValue) => {
+    setTabValue(newValue);
   };
 
   return (
@@ -165,10 +185,95 @@ const ProductDetail = (props) => {
             >
               Thêm vào giỏ hàng
             </MuiButton>
-            <MuiButton variant="contained" color="success">
+            <MuiButton
+              variant="contained"
+              color="success"
+              onClick={(e) => {
+                handleAddPost();
+              }}
+            >
               Tạo bài viết
             </MuiButton>
           </Stack>
+        </ListItem>
+        <ListItem divider>
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <TabContext value={tabValue}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChangeTab}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab label="THÔNG TIN SẢN PHẨM" value="1" />
+                  <Tab label="CHÍNH SÁCH BÁN HÀNG" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                <Grid container spacing={2} mb={2}>
+                  <Grid item xs={4}>
+                    <Typography fontSize={15} fontWeight={700} color="#e67e22">
+                      Tên sản phẩm
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography ml={5} fontSize={15} color="gray">
+                      {targetProduct && targetProduct.name}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} mb={2}>
+                  <Grid item xs={4}>
+                    <Typography fontSize={15} fontWeight={700} color="#e67e22">
+                      Series
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography ml={5} fontSize={15} color="gray">
+                      {targetProduct && targetProduct.series}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} mb={2}>
+                  <Grid item xs={4}>
+                    <Typography fontSize={15} fontWeight={700} color="#e67e22">
+                      Thương hiệu
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography ml={5} fontSize={15} color="gray">
+                      {targetProduct && targetProduct.owner}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <Typography fontSize={15} fontWeight={700} color="#e67e22">
+                      Kích thước
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography ml={5} fontSize={15} color="gray">
+                      {targetProduct && targetProduct.size}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </TabPanel>
+              <TabPanel value="2">
+                <Typography fontSize={13} color="gray" mb={1}>
+                  <FiberManualRecord />
+                  Cam kết hàng chính hãng 100%
+                </Typography>
+                <Typography fontSize={13} color="gray" mb={1}>
+                  <FiberManualRecord />
+                  Đổi trả 1:1 hoặc hỗ trợ sửa chữa lỗi NSX
+                </Typography>
+                <Typography fontSize={13} color="gray">
+                  <FiberManualRecord />
+                  Inbox shop nếu cần cung cấp hình ảnh thực tế
+                </Typography>
+              </TabPanel>
+            </TabContext>
+          </Box>
         </ListItem>
       </List>
     </Box>
