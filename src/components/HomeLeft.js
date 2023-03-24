@@ -50,7 +50,7 @@ const HomeLeft = (props) => {
                   >
                     <Typography
                       variant="h6"
-                      fontSize={13}
+                      fontSize={12}
                       color="#000"
                       padding={0.5}
                       ml={1}
@@ -72,7 +72,7 @@ const HomeLeft = (props) => {
                   >
                     <Typography
                       variant="h6"
-                      fontSize={13}
+                      fontSize={12}
                       color="#000"
                       padding={0.5}
                       ml={1}

@@ -27,7 +27,7 @@ const Home = (props) => {
         mb={1}
         justifyContent="center"
         // alignItems="center"
-        columns={{ xs: 4, sm: 11 }}
+        columns={{ xs: 4, sm: 12 }}
       >
         <Grid item xs={2.5}>
           <Paper elevation={1} sx={{ display: { xs: "none", sm: "block" } }}>

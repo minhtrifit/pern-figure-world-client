@@ -30,7 +30,7 @@ const HomeRight = (props) => {
         container
         columns={{ xs: 8, sm: 12 }}
         sx={{
-          width: { xs: "100%", sm: "70%" },
+          width: { xs: "100%", sm: "800px" },
           margin: "20px auto",
           // backgroundColor: "red",
         }}
