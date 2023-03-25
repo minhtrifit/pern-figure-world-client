@@ -4,12 +4,21 @@ import { Grid, Typography, Box, Breadcrumbs } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import ProductView from "../components/ProductView";
 import ProductDetail from "../components/ProductDetail";
+import RecommendProducts from "../components/RecommendProducts/RecommendProducts";
 import MyFooter from "../components/MyFooter";
 
 const Product = (props) => {
-  const { productList, userInfo } = props;
+  const {
+    productList,
+    userInfo,
+    getRandomID,
+    randomUniqueArray,
+    handleViewProductDetail,
+    myLocation,
+  } = props;
   const { id } = useParams();
   const [targetProduct, setTargetProduct] = useState({});
+  const [recommendList, setRecommendList] = useState([]);
 
   //==================== Page config
   // document.title = "Figure World | Chi tiết sản phẩm";
@@ -24,9 +33,35 @@ const Product = (props) => {
       return item.id === parseInt(id);
     });
 
+    // console.log(filterProduct);
+
     const [data] = filterProduct;
     setTargetProduct(data);
   }, [productList, id]);
+
+  //==================== Get random recommend list
+
+  useEffect(() => {
+    if (productList && targetProduct) {
+      let tempList = [];
+      let randomArr = [];
+
+      do {
+        randomArr = randomUniqueArray(5, 10);
+      } while (randomArr.includes(targetProduct.id));
+
+      for (var i = 0; i < randomArr.length; ++i) {
+        for (var j = 0; j < productList.length; ++j) {
+          if (productList[j].id === randomArr[i]) {
+            tempList.push(productList[j]);
+          }
+        }
+      }
+
+      // console.log(randomArr, tempList);
+      setRecommendList(tempList);
+    }
+  }, [productList, randomUniqueArray, targetProduct]);
 
   return (
     <>
@@ -65,12 +100,31 @@ const Product = (props) => {
           justifyContent="center"
         >
           <Grid item xs={3.25} /*bgcolor="red"*/>
-            <ProductView targetProduct={targetProduct} />
+            <ProductView
+              targetProduct={targetProduct}
+              myLocation={myLocation}
+            />
           </Grid>
           <Grid item xs={6} /*bgcolor="green"*/>
             <ProductDetail targetProduct={targetProduct} userInfo={userInfo} />
           </Grid>
         </Grid>
+      </Box>
+      <Box mt={2} mb={2}>
+        <Typography
+          mt={5}
+          mb={5}
+          textAlign="center"
+          fontSize={25}
+          fontWeight={500}
+        >
+          CÓ THỂ BẠN CŨNG THÍCH
+        </Typography>
+        <RecommendProducts
+          recommendList={recommendList}
+          getRandomID={getRandomID}
+          handleViewProductDetail={handleViewProductDetail}
+        />
       </Box>
       <MyFooter />
     </>

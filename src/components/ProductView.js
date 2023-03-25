@@ -1,15 +1,21 @@
 import { Box, Stack } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { LightBox } from "react-lightbox-pack"; // <--- Importing LightBox Pack
 import "react-lightbox-pack/dist/index.css";
 
 const ProductView = (props) => {
-  const { targetProduct } = props;
+  const { targetProduct, myLocation } = props;
   const [toggle, setToggle] = useState(false);
   const [sIndex, setSIndex] = useState(0);
   const [mainProductIndex, setMainProductIndex] = useState(0);
   let data = useMemo(() => [], []);
   let imageSrc = "";
+
+  //==================== Page config
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [myLocation]);
 
   useMemo(() => {
     if (targetProduct) {
@@ -23,7 +29,7 @@ const ProductView = (props) => {
             title: "test",
             description: "test",
           };
-          data.push(imageData);
+          data[i] = imageData;
         }
         // console.log(data);
       }

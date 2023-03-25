@@ -7,7 +7,14 @@ const ProductCard = (props) => {
   // console.log(product);
 
   return (
-    <Box>
+    <Box
+      sx={{
+        // background: "red",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <div className="card">
         <img src={product.photo_url[0]} alt={product.name} />
         <div className="info">
@@ -22,13 +29,14 @@ const ProductCard = (props) => {
         </div>
       </div>
       <Stack>
-        <Typography variant="p" fontSize={14}>
+        <Typography variant="p" fontSize={14} textAlign="center" mt={1}>
           {product.name}
         </Typography>
         <Typography
           variant="p"
           fontSize={14}
           fontWeight={300}
+          mt={1}
           sx={{
             color: "red",
           }}

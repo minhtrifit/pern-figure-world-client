@@ -19,8 +19,6 @@ function App() {
   const [productListPageCount, setProductListPageCount] = useState(0);
   const productPerPage = 6;
 
-  // const [pageTitle, setPageTitle] = useState("Figure World");
-
   const productitleref = useRef(null);
 
   let navigate = useNavigate();
@@ -29,6 +27,18 @@ function App() {
   //==================== Function declair
   const getRandomID = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
+  };
+
+  const randomUniqueArray = (size, max) => {
+    let arr = [];
+    let element = 0;
+    for (var i = 0; i < size; ++i) {
+      do {
+        element = getRandomID(1, max);
+      } while (arr.includes(element));
+      arr.push(element);
+    }
+    return arr;
   };
 
   const userStatus = async (data) => {
@@ -186,7 +196,16 @@ function App() {
         <Route path="/forum" element={<Forum />} />
         <Route
           path="/product/:id"
-          element={<Product productList={productList} userInfo={userInfo} />}
+          element={
+            <Product
+              productList={productList}
+              userInfo={userInfo}
+              getRandomID={getRandomID}
+              randomUniqueArray={randomUniqueArray}
+              handleViewProductDetail={handleViewProductDetail}
+              myLocation={myLocation}
+            />
+          }
         />
       </Routes>
     </div>
