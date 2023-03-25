@@ -98,6 +98,7 @@ function App() {
 
   //==================== API Calling
   useEffect(() => {
+    document.title = "Figure World";
     getProductList();
   }, []);
 

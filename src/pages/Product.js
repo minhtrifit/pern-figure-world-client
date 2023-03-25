@@ -11,8 +11,9 @@ const Product = (props) => {
   const { id } = useParams();
   const [targetProduct, setTargetProduct] = useState({});
 
-  //==================== Go to top page
+  //==================== Page config
   useEffect(() => {
+    document.title = "Figure World | Chi tiết sản phẩm";
     window.scrollTo(0, 0);
   }, []);
 
