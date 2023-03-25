@@ -1,14 +1,17 @@
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { Search, Menu } from "@mui/icons-material";
+import {
+  Button,
+  Container,
+  Form,
+  Nav,
+  Navbar,
+  Dropdown,
+  ButtonGroup,
+  ButtonToolbar,
+} from "react-bootstrap";
+import { Search } from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 import { Stack, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const MyNav = (props) => {
   const { handleSignInWithGoogle, handleLogOut, userInfo } = props;
@@ -90,22 +93,37 @@ const MyNav = (props) => {
           ) : (
             <Stack direction="row" spacing={2}>
               {/* <Typography mt={1}>{userInfo.displayName}</Typography> */}
-              <Avatar alt={userInfo.uid} src={userInfo.photoURL} />
-              <DropdownButton
-                id="dropdown-basic-button"
-                title=<Menu />
-                align="start"
-              >
-                <Dropdown.Item href="#profile">Trang cá nhân</Dropdown.Item>
-              </DropdownButton>
-              <Button
-                variant="danger"
-                onClick={(e) => {
-                  handleLogOut();
-                }}
-              >
-                Đăng xuất
-              </Button>
+              <ButtonToolbar>
+                <ButtonGroup>
+                  <Avatar alt={userInfo.uid} src={userInfo.photoURL} />
+                </ButtonGroup>
+                <ButtonGroup className="me-1">
+                  <Dropdown align={{ md: "end" }}>
+                    <Dropdown.Toggle variant="link"></Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item as={Link} to="/profile">
+                        Trang cá nhân
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/carts">
+                        Lịch sử mua hàng
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/posts">
+                        Danh sách bài viết
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </ButtonGroup>
+                <ButtonGroup className="me-1">
+                  <Button
+                    variant="danger"
+                    onClick={(e) => {
+                      handleLogOut();
+                    }}
+                  >
+                    Đăng xuất
+                  </Button>
+                </ButtonGroup>
+              </ButtonToolbar>
             </Stack>
           )}
         </Navbar.Collapse>
