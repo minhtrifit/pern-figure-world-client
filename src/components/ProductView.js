@@ -15,6 +15,7 @@ const ProductView = (props) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setMainProductIndex(0);
   }, [myLocation]);
 
   useMemo(() => {
