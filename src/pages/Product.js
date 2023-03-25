@@ -12,8 +12,9 @@ const Product = (props) => {
   const [targetProduct, setTargetProduct] = useState({});
 
   //==================== Page config
+  // document.title = "Figure World | Chi tiết sản phẩm";
+
   useEffect(() => {
-    document.title = "Figure World | Chi tiết sản phẩm";
     window.scrollTo(0, 0);
   }, []);
 

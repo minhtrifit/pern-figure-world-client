@@ -19,6 +19,8 @@ function App() {
   const [productListPageCount, setProductListPageCount] = useState(0);
   const productPerPage = 6;
 
+  // const [pageTitle, setPageTitle] = useState("Figure World");
+
   const productitleref = useRef(null);
 
   let navigate = useNavigate();
@@ -98,7 +100,6 @@ function App() {
 
   //==================== API Calling
   useEffect(() => {
-    document.title = "Figure World";
     getProductList();
   }, []);
 
@@ -109,6 +110,17 @@ function App() {
       // console.log("Check from main: ", productList.length);
     }
   }, [productList]);
+
+  useEffect(() => {
+    const { pathname } = myLocation;
+    // console.log(pathname);
+
+    if (pathname.includes("/product")) {
+      document.title = "Figure World | Chi tiết sản phẩm";
+    } else if (pathname === "/") {
+      document.title = "Figure World";
+    }
+  }, [myLocation]);
 
   //==================== Route handling
 

@@ -30,7 +30,7 @@ const ProductDetail = (props) => {
   const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
   const [tabValue, setTabValue] = useState("1");
 
-  console.log(targetProduct);
+  // console.log(targetProduct);
 
   if (Object.keys(userInfo).length !== 0) {
     console.log("Check from ProductDetail:", userInfo);
