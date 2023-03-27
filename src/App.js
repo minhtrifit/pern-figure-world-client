@@ -9,6 +9,7 @@ import MyNav from "./components/MyNav";
 import Home from "./pages/Home";
 import Forum from "./pages/Forum";
 import Product from "./pages/Product";
+import Pay from "./pages/Pay";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -23,6 +24,11 @@ function App() {
 
   let navigate = useNavigate();
   const myLocation = useLocation();
+
+  const [cartList, setCartList] = useState([]);
+  const [totalCart, setTotalCart] = useState(0);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const [cartDetailList, setCartDetailList] = useState([]);
 
   //==================== Function declair
   const getRandomID = (min, max) => {
@@ -132,6 +138,12 @@ function App() {
     }
   }, [myLocation]);
 
+  // useEffect(() => {
+  //   if (cartList.length !== 0) {
+  //     console.log(cartList);
+  //   }
+  // }, [cartList]);
+
   //==================== Route handling
 
   // Product view per page handle
@@ -171,12 +183,123 @@ function App() {
     navigate(`product/${id}`);
   };
 
+  const handleAddCart = (
+    setOpenLoginAlert,
+    setOpenSuccessAlert,
+    targetProduct,
+    cartAmount
+  ) => {
+    // User not login
+    if (Object.keys(userInfo).length === 0) {
+      setOpenLoginAlert(true);
+    } else {
+      let checkInit = false;
+
+      // console.log(targetProduct);
+
+      const product = {
+        user_email: userInfo.email,
+        product_id: targetProduct.id,
+        amount: cartAmount,
+        price: targetProduct.price * cartAmount,
+      };
+
+      const productDetail = {
+        product_id: targetProduct.id,
+        name: targetProduct.name,
+        photo_url: targetProduct.photo_url[0],
+        amount: cartAmount,
+        price: targetProduct.price * cartAmount,
+      };
+
+      // console.log(product);
+      // console.log(productDetail);
+
+      // set nav cart amount
+      let tempCartTotal = totalCart;
+      tempCartTotal += product.amount;
+      setTotalCart(tempCartTotal);
+
+      // If product init in cart list
+      for (var i = 0; i < cartList.length; ++i) {
+        if (cartList[i].product_id === product.product_id) {
+          // Update amount
+          cartList[i].amount += product.amount;
+          cartDetailList[i].amount += productDetail.amount;
+
+          // Update price
+          cartList[i].price = cartList[i].amount * targetProduct.price;
+          cartDetailList[i].price =
+            cartDetailList[i].amount * targetProduct.price;
+
+          checkInit = true;
+        }
+      }
+
+      if (!checkInit) {
+        setCartList([...cartList, product]); // Save to database
+        setCartDetailList([...cartDetailList, productDetail]); // Cart showing
+      }
+
+      // console.log(cartList);
+      // console.log(cartDetailList);
+      setOpenSuccessAlert(true);
+    }
+  };
+
+  const handleDeleteCartItem = (product) => {
+    const tempCartList = cartList.filter((item) => {
+      return item.product_id !== product.product_id;
+    });
+
+    const [tempTargetProduct] = cartList.filter((item) => {
+      return item.product_id === product.product_id;
+    });
+
+    const tempCartDetailList = cartDetailList.filter((item) => {
+      return item.product_id !== product.product_id;
+    });
+
+    // Update total amount
+    let tempTotal = totalCart;
+    tempTotal -= tempTargetProduct.amount;
+    setTotalCart(tempTotal);
+
+    // Update cart list
+    setCartList(tempCartList);
+    setCartDetailList(tempCartDetailList);
+  };
+
+  const handleCartPay = (handleCloseCartModal) => {
+    handleCloseCartModal();
+    navigate("pay");
+  };
+
+  const handleAddPost = (setOpenLoginAlert, setOpenSuccessAlert) => {
+    // User not login
+    if (Object.keys(userInfo).length === 0) {
+      setOpenLoginAlert(true);
+    } else {
+      setOpenSuccessAlert(true);
+    }
+  };
+
+  //==================== Main function component
+
   return (
     <div className="app">
       <MyNav
         handleSignInWithGoogle={handleSignInWithGoogle}
         handleLogOut={handleLogOut}
         userInfo={userInfo}
+        showCartModal={showCartModal}
+        setShowCartModal={setShowCartModal}
+        cartList={cartList}
+        totalCart={totalCart}
+        cartDetailList={cartDetailList}
+        getRandomID={getRandomID}
+        handleDeleteCartItem={handleDeleteCartItem}
+        handleCartPay={handleCartPay}
       />
       <Routes>
         <Route
@@ -204,6 +327,20 @@ function App() {
               randomUniqueArray={randomUniqueArray}
               handleViewProductDetail={handleViewProductDetail}
               myLocation={myLocation}
+              handleAddCart={handleAddCart}
+              handleAddPost={handleAddPost}
+            />
+          }
+        />
+        <Route
+          path="/pay"
+          element={
+            <Pay
+              userInfo={userInfo}
+              cartList={cartList}
+              cartDetailList={cartDetailList}
+              handleViewProductDetail={handleViewProductDetail}
+              getRandomID={getRandomID}
             />
           }
         />

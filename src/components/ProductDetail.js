@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -24,7 +24,7 @@ import {
 import { FiberManualRecord } from "@mui/icons-material";
 
 const ProductDetail = (props) => {
-  const { targetProduct, userInfo } = props;
+  const { targetProduct, userInfo, handleAddCart, handleAddPost } = props;
   const [cartAmount, setCartAmount] = useState(1);
   const [openLoginAlert, setOpenLoginAlert] = useState(false);
   const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
@@ -32,8 +32,12 @@ const ProductDetail = (props) => {
 
   // console.log(targetProduct);
 
+  useEffect(() => {
+    setCartAmount(1);
+  }, [targetProduct]);
+
   if (Object.keys(userInfo).length !== 0) {
-    console.log("Check from ProductDetail:", userInfo);
+    // console.log("Check from ProductDetail:", userInfo);
   }
 
   const handleChangeCartAmount = (target) => {
@@ -45,24 +49,6 @@ const ProductDetail = (props) => {
       if (cartAmount > 1) {
         setCartAmount(--tempAmount);
       }
-    }
-  };
-
-  const handleAddCart = () => {
-    // User not login
-    if (Object.keys(userInfo).length === 0) {
-      setOpenLoginAlert(true);
-    } else {
-      setOpenSuccessAlert(true);
-    }
-  };
-
-  const handleAddPost = () => {
-    // User not login
-    if (Object.keys(userInfo).length === 0) {
-      setOpenLoginAlert(true);
-    } else {
-      setOpenSuccessAlert(true);
     }
   };
 
@@ -180,7 +166,12 @@ const ProductDetail = (props) => {
               variant="contained"
               color="error"
               onClick={(e) => {
-                handleAddCart();
+                handleAddCart(
+                  setOpenLoginAlert,
+                  setOpenSuccessAlert,
+                  targetProduct,
+                  cartAmount
+                );
               }}
             >
               Thêm vào giỏ hàng
@@ -189,7 +180,7 @@ const ProductDetail = (props) => {
               variant="contained"
               color="success"
               onClick={(e) => {
-                handleAddPost();
+                handleAddPost(setOpenLoginAlert, setOpenSuccessAlert);
               }}
             >
               Tạo bài viết

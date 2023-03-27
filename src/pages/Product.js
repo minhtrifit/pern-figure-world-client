@@ -15,6 +15,8 @@ const Product = (props) => {
     randomUniqueArray,
     handleViewProductDetail,
     myLocation,
+    handleAddCart,
+    handleAddPost,
   } = props;
   const { id } = useParams();
   const [targetProduct, setTargetProduct] = useState({});
@@ -106,7 +108,12 @@ const Product = (props) => {
             />
           </Grid>
           <Grid item xs={6} /*bgcolor="green"*/>
-            <ProductDetail targetProduct={targetProduct} userInfo={userInfo} />
+            <ProductDetail
+              targetProduct={targetProduct}
+              userInfo={userInfo}
+              handleAddCart={handleAddCart}
+              handleAddPost={handleAddPost}
+            />
           </Grid>
         </Grid>
       </Box>
