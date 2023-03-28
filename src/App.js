@@ -35,6 +35,15 @@ function App() {
     return Math.floor(Math.random() * (max - min)) + min;
   };
 
+  const getDay = () => {
+    const init = new Date();
+    const day = init.getDate();
+    const month = init.getMonth() + 1;
+    const year = init.getFullYear();
+    const result = day + "/" + month + "/" + year;
+    return result;
+  };
+
   const randomUniqueArray = (size, max) => {
     let arr = [];
     let element = 0;
@@ -133,6 +142,8 @@ function App() {
 
     if (pathname.includes("/product")) {
       document.title = "Figure World | Chi tiết sản phẩm";
+    } else if (pathname === "/pay") {
+      document.title = "Figure World | Thanh toán";
     } else if (pathname === "/") {
       document.title = "Figure World";
     }
@@ -275,6 +286,29 @@ function App() {
     navigate("pay");
   };
 
+  const handleConfirmCart = async (cartList) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_API}/carts/confirm`,
+        cartList,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Reset cart
+      setCartList([]);
+      setCartDetailList([]);
+      setTotalCart(0);
+
+      console.log(cartList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleAddPost = (setOpenLoginAlert, setOpenSuccessAlert) => {
     // User not login
     if (Object.keys(userInfo).length === 0) {
@@ -341,6 +375,8 @@ function App() {
               cartDetailList={cartDetailList}
               handleViewProductDetail={handleViewProductDetail}
               getRandomID={getRandomID}
+              handleConfirmCart={handleConfirmCart}
+              getDay={getDay}
             />
           }
         />

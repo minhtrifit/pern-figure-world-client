@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Paper,
@@ -9,6 +10,8 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import MyFooter from "../components/MyFooter";
 
 const Pay = (props) => {
   const {
@@ -17,11 +20,25 @@ const Pay = (props) => {
     cartDetailList,
     handleViewProductDetail,
     getRandomID,
+    handleConfirmCart,
+    getDay,
   } = props;
 
-  const [totalCost, setTotalCost] = useState(0);
-
   //   console.log(cartDetailList);
+
+  let navigate = useNavigate();
+
+  const [totalCost, setTotalCost] = useState(0);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [paySuccess, setPaySuccess] = useState(false);
+
+  // Confirm modal event handling
+  const handleCloseConfirm = () => setShowConfirm(false);
+  const handleShowConfirm = () => setShowConfirm(true);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   //==================== Count total pay
   useEffect(() => {
@@ -34,8 +51,33 @@ const Pay = (props) => {
     setTotalCost(sum);
   }, [cartList]);
 
+  const handlePay = (cartList) => {
+    handleConfirmCart(cartList);
+    handleCloseConfirm();
+    setPaySuccess(!paySuccess);
+  };
+
   return (
     <>
+      <Modal show={showConfirm} onHide={handleCloseConfirm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông báo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Xác nhận đặt hàng ?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseConfirm}>
+            Đóng
+          </Button>
+          <Button
+            variant="success"
+            onClick={(e) => {
+              handlePay(cartList);
+            }}
+          >
+            Đồng ý
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Box
         pl={5}
         pt={1}
@@ -60,161 +102,253 @@ const Pay = (props) => {
           </Typography>
         </Breadcrumbs>
       </Box>
-      <Box
-        sx={{
-          width: {
-            xs: "90%",
-            sm: "80%",
-            md: "60%",
-          },
-          margin: "50px auto",
-          // backgroundColor: "red",
-        }}
-      >
-        <Paper elevation={2}>
-          <Stack p={3}>
-            <Typography fontSize={25} fontWeight={700} textAlign="center">
-              THÔNG TIN ĐƠN HÀNG
-            </Typography>
-            <Typography
-              mb={1}
-              sx={{
-                fontSize: {
-                  xs: 15,
-                  sm: 18,
-                },
-              }}
-            >
-              Thông tin người nhận: {userInfo.displayName}
-            </Typography>
-            <Typography
-              mb={1}
-              sx={{
-                fontSize: {
-                  xs: 15,
-                  sm: 18,
-                },
-              }}
-            >
-              Địa chỉ email: {userInfo.email}
-            </Typography>
-            <Typography
-              mb={1}
-              sx={{
-                fontSize: {
-                  xs: 15,
-                  sm: 18,
-                },
-              }}
-              fontWeight={500}
-              color="primary"
-            >
-              Danh sách sản phẩm đặt mua:
-            </Typography>
-            <Grid container columns={{ xs: 12 }} justifyContent="center">
-              {cartDetailList &&
-                cartDetailList.map((item) => {
-                  return (
-                    <Grid item xs={8} key={getRandomID(10000, 99999)}>
-                      <Stack
-                        direction="row"
-                        spacing={5}
-                        padding={2}
-                        sx={{
-                          width: "100%",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: {
-                              xs: "80px",
-                              sm: "150px",
-                            },
-                            minWidth: {
-                              xs: "80px",
-                              sm: "150px",
-                            },
-                            //   backgroundColor: "red",
-                          }}
-                        >
-                          <img
-                            src={item.photo_url}
-                            alt={item.name}
-                            style={{
-                              width: "100%",
-                            }}
-                          />
-                        </Box>
-                        <Box>
-                          <Box mb={1}>
-                            <Typography
-                              sx={{
-                                fontSize: {
-                                  xs: 14,
-                                  sm: 18,
-                                },
-                              }}
-                              fontWeight={700}
-                            >
-                              {item.name}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: {
-                                  xs: 14,
-                                  sm: 18,
-                                },
-                              }}
-                            >
-                              Số lượng: {item.amount}
-                            </Typography>
-                            <Typography
-                              color="red"
-                              sx={{
-                                fontSize: {
-                                  xs: 14,
-                                  sm: 18,
-                                },
-                              }}
-                            >
-                              Giá: {item.price}đ
-                            </Typography>
-                            <Box mt={2}>
-                              <Button
-                                variant="primary"
-                                onClick={(e) =>
-                                  handleViewProductDetail(item.product_id)
-                                }
-                              >
-                                Xem chi tiết
-                              </Button>
-                            </Box>
-                          </Box>
-                        </Box>
-                      </Stack>
-                    </Grid>
-                  );
-                })}
-            </Grid>
-            <Box mt={2}>
+      {!paySuccess ? (
+        <Box
+          sx={{
+            width: {
+              xs: "90%",
+              sm: "80%",
+              md: "50%",
+            },
+            margin: "50px auto",
+            // backgroundColor: "red",
+          }}
+        >
+          <Paper elevation={2}>
+            <Stack p={3}>
+              <Typography fontSize={25} fontWeight={700} textAlign="center">
+                THÔNG TIN ĐƠN HÀNG
+              </Typography>
               <Typography
-                mb={2}
-                color="green"
-                fontWeight={500}
+                mb={1}
                 sx={{
                   fontSize: {
                     xs: 15,
-                    sm: 20,
+                    sm: 18,
                   },
                 }}
               >
-                Tổng tiền: {totalCost}
+                Thông tin người nhận: {userInfo.displayName}
               </Typography>
-              <Button variant="warning">Đặt hàng</Button>
+              <Typography
+                mb={1}
+                sx={{
+                  fontSize: {
+                    xs: 15,
+                    sm: 18,
+                  },
+                }}
+              >
+                Địa chỉ email: {userInfo.email}
+              </Typography>
+              <Typography
+                mb={1}
+                sx={{
+                  fontSize: {
+                    xs: 15,
+                    sm: 18,
+                  },
+                }}
+              >
+                Ngày đặt mua: {getDay()}
+              </Typography>
+              <Typography
+                mb={1}
+                sx={{
+                  fontSize: {
+                    xs: 15,
+                    sm: 18,
+                  },
+                }}
+                fontWeight={500}
+                color="primary"
+              >
+                Danh sách sản phẩm đặt mua:
+              </Typography>
+              <Grid
+                container
+                columns={{ xs: 12 }}
+                spacing={3}
+                justifyContent="center"
+              >
+                {cartDetailList &&
+                  cartDetailList.map((item) => {
+                    return (
+                      <Grid item xs={12} key={getRandomID(10000, 99999)}>
+                        <Paper elevation={2}>
+                          <Box>
+                            <Stack
+                              direction="row"
+                              spacing={5}
+                              padding={2}
+                              sx={{
+                                width: "100%",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  width: {
+                                    xs: "80px",
+                                    sm: "150px",
+                                  },
+                                  minWidth: {
+                                    xs: "80px",
+                                    sm: "150px",
+                                  },
+                                }}
+                              >
+                                <img
+                                  src={item.photo_url}
+                                  alt={item.name}
+                                  style={{
+                                    width: "100%",
+                                  }}
+                                />
+                              </Box>
+                              <Box>
+                                <Box mb={1}>
+                                  <Typography
+                                    sx={{
+                                      fontSize: {
+                                        xs: 14,
+                                        sm: 18,
+                                      },
+                                    }}
+                                    fontWeight={700}
+                                  >
+                                    {item.name}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      fontSize: {
+                                        xs: 14,
+                                        sm: 18,
+                                      },
+                                    }}
+                                  >
+                                    Số lượng: {item.amount}
+                                  </Typography>
+                                  <Typography
+                                    color="red"
+                                    sx={{
+                                      fontSize: {
+                                        xs: 14,
+                                        sm: 18,
+                                      },
+                                    }}
+                                  >
+                                    Giá: {item.price}đ
+                                  </Typography>
+                                  <Box mt={2}>
+                                    <Button
+                                      variant="primary"
+                                      onClick={(e) =>
+                                        handleViewProductDetail(item.product_id)
+                                      }
+                                    >
+                                      Xem chi tiết
+                                    </Button>
+                                  </Box>
+                                </Box>
+                              </Box>
+                            </Stack>
+                          </Box>
+                        </Paper>
+                      </Grid>
+                    );
+                  })}
+              </Grid>
+              <Box mt={2}>
+                <Typography
+                  mb={2}
+                  color="green"
+                  fontWeight={500}
+                  sx={{
+                    fontSize: {
+                      xs: 15,
+                      sm: 20,
+                    },
+                  }}
+                >
+                  Tổng tiền: {totalCost}đ
+                </Typography>
+                <Button
+                  variant="warning"
+                  onClick={(e) => {
+                    handleShowConfirm();
+                  }}
+                >
+                  Đặt hàng
+                </Button>
+              </Box>
+            </Stack>
+          </Paper>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            width: {
+              xs: "90%",
+              sm: "80%",
+              md: "50%",
+            },
+            margin: "50px auto",
+            // backgroundColor: "red",
+          }}
+        >
+          <Paper elevation={2}>
+            <Box
+              padding={3}
+              sx={{
+                minHeight: "50vh",
+              }}
+            >
+              <div>
+                <div className="mb-4 text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    color="green"
+                    width="75"
+                    height="75"
+                    fill="currentColor"
+                    className="bi bi-check-circle-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                  </svg>
+                </div>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    // backgroundColor: "red",
+                  }}
+                >
+                  <Typography
+                    color="green"
+                    fontSize={30}
+                    fontWeight={700}
+                    mb={2}
+                  >
+                    Đặt hàng thành công!
+                  </Typography>
+                  <Button
+                    variant="warning"
+                    onClick={(e) => {
+                      navigate("/");
+                      setPaySuccess(false);
+                    }}
+                  >
+                    Quay lại trang chủ
+                  </Button>
+                </Box>
+              </div>
             </Box>
-          </Stack>
-        </Paper>
-      </Box>
+          </Paper>
+        </Box>
+      )}
+      <MyFooter />
     </>
   );
 };
