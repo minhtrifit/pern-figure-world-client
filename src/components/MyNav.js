@@ -27,6 +27,7 @@ const MyNav = (props) => {
     getRandomID,
     handleDeleteCartItem,
     handleCartPay,
+    handleViewProductDetail,
   } = props;
 
   // if (Object.keys(userInfo).length !== 0) {
@@ -43,6 +44,7 @@ const MyNav = (props) => {
         getRandomID={getRandomID}
         handleDeleteCartItem={handleDeleteCartItem}
         handleCartPay={handleCartPay}
+        handleViewProductDetail={handleViewProductDetail}
       />
       <Navbar bg="light" expand="lg" /*sticky="top"*/>
         <Container fluid>

@@ -281,9 +281,18 @@ function App() {
     setCartDetailList(tempCartDetailList);
   };
 
-  const handleCartPay = (handleCloseCartModal) => {
-    handleCloseCartModal();
-    navigate("pay");
+  const handleCartPay = (
+    cartDetailList,
+    setOpenCartAlert,
+    handleCloseCartModal
+  ) => {
+    if (cartDetailList.length === 0) {
+      console.log("Cart empty");
+      setOpenCartAlert(true);
+    } else {
+      handleCloseCartModal();
+      navigate("pay");
+    }
   };
 
   const handleConfirmCart = async (cartList) => {
@@ -334,6 +343,7 @@ function App() {
         getRandomID={getRandomID}
         handleDeleteCartItem={handleDeleteCartItem}
         handleCartPay={handleCartPay}
+        handleViewProductDetail={handleViewProductDetail}
       />
       <Routes>
         <Route
