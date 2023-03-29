@@ -12,6 +12,7 @@ import { NavLink } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import MyFooter from "../components/MyFooter";
+import Loading from "../components/Loading";
 
 const Pay = (props) => {
   const {
@@ -31,6 +32,7 @@ const Pay = (props) => {
   const [totalCost, setTotalCost] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   const [paySuccess, setPaySuccess] = useState(false);
+  const [loadingSuccess, setLoadingSuccess] = useState(false);
 
   // Confirm modal event handling
   const handleCloseConfirm = () => setShowConfirm(false);
@@ -51,9 +53,21 @@ const Pay = (props) => {
     setTotalCost(sum);
   }, [cartList]);
 
+  //==================== Loading pay
+  useEffect(() => {
+    // console.log(loadingSuccess);
+
+    if (loadingSuccess) {
+      setTimeout(() => {
+        setLoadingSuccess(!loadingSuccess);
+      }, 2000);
+    }
+  }, [loadingSuccess]);
+
   const handlePay = (cartList) => {
     handleConfirmCart(cartList);
     handleCloseConfirm();
+    setLoadingSuccess(true);
     setPaySuccess(!paySuccess);
   };
 
@@ -299,73 +313,79 @@ const Pay = (props) => {
             </>
           ) : (
             <>
-              <Box
-                sx={{
-                  width: {
-                    xs: "90%",
-                    sm: "80%",
-                    md: "50%",
-                  },
-                  margin: "50px auto",
-                  // backgroundColor: "red",
-                }}
-              >
-                <Paper elevation={2}>
+              {loadingSuccess ? (
+                <Loading title="Đang tiến hành thanh toán..." />
+              ) : (
+                <>
                   <Box
-                    padding={3}
-                    sx={
-                      {
-                        // minHeight: "50vh",
-                      }
-                    }
+                    sx={{
+                      width: {
+                        xs: "90%",
+                        sm: "80%",
+                        md: "50%",
+                      },
+                      margin: "50px auto",
+                      // backgroundColor: "red",
+                    }}
                   >
-                    <div>
-                      <div className="mb-4 text-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          color="green"
-                          width="75"
-                          height="75"
-                          fill="currentColor"
-                          className="bi bi-check-circle-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                        </svg>
-                      </div>
+                    <Paper elevation={2}>
                       <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          // backgroundColor: "red",
-                        }}
+                        padding={3}
+                        sx={
+                          {
+                            // minHeight: "50vh",
+                          }
+                        }
                       >
-                        <Typography
-                          color="green"
-                          fontSize={30}
-                          fontWeight={700}
-                          mb={2}
-                        >
-                          Đặt hàng thành công!
-                        </Typography>
-                        <Button
-                          variant="warning"
-                          onClick={(e) => {
-                            navigate("/");
-                            setPaySuccess(false);
-                          }}
-                        >
-                          Quay lại trang chủ
-                        </Button>
+                        <div>
+                          <div className="mb-4 text-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              color="green"
+                              width="75"
+                              height="75"
+                              fill="currentColor"
+                              className="bi bi-check-circle-fill"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                            </svg>
+                          </div>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              // backgroundColor: "red",
+                            }}
+                          >
+                            <Typography
+                              color="green"
+                              fontSize={30}
+                              fontWeight={700}
+                              mb={2}
+                            >
+                              Đặt hàng thành công!
+                            </Typography>
+                            <Button
+                              variant="warning"
+                              onClick={(e) => {
+                                navigate("/");
+                                setPaySuccess(false);
+                              }}
+                            >
+                              Quay lại trang chủ
+                            </Button>
+                          </Box>
+                        </div>
                       </Box>
-                    </div>
+                    </Paper>
                   </Box>
-                </Paper>
-              </Box>
-              <Box sx={{ width: "100%", position: "fixed", bottom: 0 }}>
-                <MyFooter />
-              </Box>
+                  <Box sx={{ width: "100%", position: "fixed", bottom: 0 }}>
+                    <MyFooter />
+                  </Box>
+                </>
+              )}
             </>
           )}
         </>

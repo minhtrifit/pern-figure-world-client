@@ -30,6 +30,8 @@ function App() {
   const [showCartModal, setShowCartModal] = useState(false);
   const [cartDetailList, setCartDetailList] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   //==================== Function declair
   const getRandomID = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -165,6 +167,26 @@ function App() {
       getProductListPerPage(productList, 1);
     }
   }, [myLocation, productList]);
+
+  //==================== Loading handling
+
+  useEffect(() => {
+    const { pathname } = myLocation;
+    // console.log(pathname);
+
+    // Add pathname below this comment if want loading animation...
+    if (pathname.includes("/product")) {
+      // console.log("Check loading: ", loading);
+
+      if (loading) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      }
+    } else {
+      setLoading(true);
+    }
+  }, [myLocation, loading]);
 
   //==================== Event handling
   const handleSignInWithGoogle = () => {
@@ -373,6 +395,8 @@ function App() {
               myLocation={myLocation}
               handleAddCart={handleAddCart}
               handleAddPost={handleAddPost}
+              loading={loading}
+              setLoading={setLoading}
             />
           }
         />

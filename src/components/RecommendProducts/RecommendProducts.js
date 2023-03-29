@@ -5,7 +5,8 @@ import "./RecommendProducts.scss";
 import ProductCard from "../ProductCard/ProductCard";
 
 const RecommendProducts = (props) => {
-  const { recommendList, getRandomID, handleViewProductDetail } = props;
+  const { recommendList, getRandomID, handleViewProductDetail, setLoading } =
+    props;
 
   // console.log(recommendList);
 
@@ -44,6 +45,7 @@ const RecommendProducts = (props) => {
                 <ProductCard
                   product={item}
                   handleViewProductDetail={handleViewProductDetail}
+                  setLoading={setLoading}
                 />
               </SwiperSlide>
             );
