@@ -51,8 +51,12 @@ const Product = (props) => {
       let tempList = [];
       let randomArr = [];
 
+      const maxLength = productList.length;
+
       do {
-        randomArr = randomUniqueArray(5, 10);
+        if (maxLength) {
+          randomArr = randomUniqueArray(5, maxLength);
+        }
       } while (randomArr.includes(targetProduct.id));
 
       for (var i = 0; i < randomArr.length; ++i) {

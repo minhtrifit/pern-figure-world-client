@@ -11,12 +11,12 @@ import {
 import { Search, ShoppingCart } from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 import { Stack, Typography, Badge, Box } from "@mui/material";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import CartList from "./CartList";
 
 const MyNav = (props) => {
   const {
-    handleSignInWithGoogle,
+    // handleSignInWithGoogle,
     handleLogOut,
     userInfo,
     showCartModal,
@@ -29,6 +29,8 @@ const MyNav = (props) => {
     handleCartPay,
     handleViewProductDetail,
   } = props;
+
+  let navigate = useNavigate();
 
   // if (Object.keys(userInfo).length !== 0) {
   //   console.log("Check from nav:", userInfo);
@@ -110,7 +112,8 @@ const MyNav = (props) => {
               <Button
                 variant="primary"
                 onClick={(e) => {
-                  handleSignInWithGoogle();
+                  // handleSignInWithGoogle();
+                  navigate("/login");
                 }}
               >
                 Đăng nhập

@@ -7,6 +7,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.scss";
 import MyNav from "./components/MyNav";
 import Home from "./pages/Home";
+import UserLogin from "./pages/UserLogin";
 import Forum from "./pages/Forum";
 import Product from "./pages/Product";
 import Pay from "./pages/Pay";
@@ -60,11 +61,15 @@ function App() {
 
   const userStatus = async (data) => {
     try {
-      await axios.post(`${process.env.REACT_APP_SERVER_API}/status`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_API}/users/status`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -368,6 +373,15 @@ function App() {
         handleViewProductDetail={handleViewProductDetail}
       />
       <Routes>
+        <Route
+          path="/login"
+          element={
+            <UserLogin
+              userInfo={userInfo}
+              handleSignInWithGoogle={handleSignInWithGoogle}
+            />
+          }
+        />
         <Route
           path="/"
           element={
