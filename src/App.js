@@ -185,11 +185,6 @@ function App() {
       }
 
       // console.log("Login successfully!");
-    } else {
-      const temp = localStorage.getItem("userLogin");
-      if (temp !== null) {
-        localStorage.removeItem("userLogin");
-      }
     }
   }, [user]);
 
@@ -198,40 +193,36 @@ function App() {
   useEffect(() => {
     const checkToken = localStorage.getItem("token");
 
-    const getVerify = async (token) => {
-      userVerifyToken(token);
-    };
-
     if (checkToken) {
-      setAuthToken(checkToken);
+      userVerifyToken(checkToken);
+    } else {
       if (authToken) {
-        getVerify(authToken);
+        localStorage.setItem("token", authToken);
 
-        // Verify token successfully
-        if (Object.keys(userTokenInfo).length !== 0) {
-          // console.log(userTokenInfo);
-          setUserInfo(userTokenInfo);
+        const temp = localStorage.getItem("token");
 
-          const temp = localStorage.getItem("userLogin");
-
-          // Change user status === true when first login (not change if refresh page)
-          if (temp === null) {
-            // console.log("User first login");
-
-            userAuth(userTokenInfo); // Call API to set User Auth
-            localStorage.setItem("userLogin", true);
-          }
+        if (temp !== null) {
+          userVerifyToken(temp);
         }
       }
     }
+  }, [authToken]);
 
-    // Clean up token after verify successfully
-    return () => {
-      if (Object.keys(userTokenInfo).length !== 0) {
-        localStorage.removeItem("token");
+  useEffect(() => {
+    // If verify user successfully
+    if (Object.keys(userTokenInfo).length !== 0) {
+      // console.log("User login with account", userTokenInfo);
+
+      setUserInfo(userTokenInfo);
+
+      const temp = localStorage.getItem("userLogin");
+
+      if (temp === null) {
+        userAuth(userTokenInfo); // Call API to set User Auth
+        localStorage.setItem("userLogin", true);
       }
-    };
-  }, [authToken, userTokenInfo]);
+    }
+  }, [userTokenInfo]);
 
   //==================== API Calling
   useEffect(() => {
@@ -312,9 +303,8 @@ function App() {
       const { token } = rs;
 
       if (token) {
-        console.log(token);
-        localStorage.setItem("token", token);
-        window.location = "/";
+        navigate("/");
+        setAuthToken(token);
       }
     } catch (error) {
       console.log(error);
@@ -329,6 +319,7 @@ function App() {
     userAuth(userInfo); // Set User status = false
     setUserInfo("");
     localStorage.removeItem("userLogin");
+    localStorage.removeItem("token");
     // console.log("Log out successfully!");
   };
 
