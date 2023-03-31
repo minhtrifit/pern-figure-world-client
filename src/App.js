@@ -150,6 +150,21 @@ function App() {
     return Math.ceil(length / value);
   };
 
+  // const getAccountUser = async () => {
+  //   try {
+  //     const rs = await axios.get(
+  //       `${process.env.REACT_APP_SERVER_API}/users/account`
+  //     );
+  //     const data = rs.data;
+  //     if (data.userList) {
+  //       console.log(data.userList);
+  //       // setAccountList(data.userList);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   //==================== User Auth
   useEffect(() => {
     // If user login successfully
@@ -170,6 +185,11 @@ function App() {
       }
 
       // console.log("Login successfully!");
+    } else {
+      const temp = localStorage.getItem("userLogin");
+      if (temp !== null) {
+        localStorage.removeItem("userLogin");
+      }
     }
   }, [user]);
 
