@@ -165,6 +165,22 @@ function App() {
   //   }
   // };
 
+  const createNewPost = async (data) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_API}/posts/create`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //==================== User Auth
   useEffect(() => {
     // If user login successfully
@@ -461,12 +477,39 @@ function App() {
     }
   };
 
-  const handleAddPost = (setOpenLoginAlert, setOpenSuccessAlert) => {
+  const handleAddPost = (setOpenLoginAlert, handleShowCreatePost) => {
     // User not login
     if (Object.keys(userInfo).length === 0) {
       setOpenLoginAlert(true);
     } else {
-      setOpenSuccessAlert(true);
+      handleShowCreatePost(true);
+    }
+  };
+
+  const handleConfirmPost = (
+    userInfo,
+    targetProduct,
+    commentValue,
+    ratingValue,
+    handleCloseCreatePost,
+    setCommentValue,
+    setRatingValue,
+    setOpenSuccessPostAlert
+  ) => {
+    if (userInfo && targetProduct && commentValue !== "") {
+      const data = {
+        user_email: userInfo.email,
+        product_id: targetProduct.id,
+        content: commentValue,
+        rating: ratingValue,
+      };
+      if (data) {
+        createNewPost(data);
+        handleCloseCreatePost();
+        setCommentValue("");
+        setRatingValue(3);
+        setOpenSuccessPostAlert(true);
+      }
     }
   };
 
@@ -526,6 +569,7 @@ function App() {
               myLocation={myLocation}
               handleAddCart={handleAddCart}
               handleAddPost={handleAddPost}
+              handleConfirmPost={handleConfirmPost}
               loading={loading}
               setLoading={setLoading}
             />

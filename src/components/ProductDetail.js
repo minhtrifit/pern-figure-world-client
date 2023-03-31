@@ -10,6 +10,8 @@ import {
   Alert,
   Tab,
   Grid,
+  Rating,
+  styled,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -20,15 +22,39 @@ import {
   ButtonToolbar,
   Form,
   InputGroup,
+  Modal,
 } from "react-bootstrap";
-import { FiberManualRecord } from "@mui/icons-material";
+import {
+  FiberManualRecord,
+  Favorite,
+  FavoriteBorder,
+} from "@mui/icons-material";
+
+const StyledRating = styled(Rating)({
+  "& .MuiRating-iconFilled": {
+    color: "#ff6d75",
+  },
+  "& .MuiRating-iconHover": {
+    color: "#ff3d47",
+  },
+});
 
 const ProductDetail = (props) => {
-  const { targetProduct, userInfo, handleAddCart, handleAddPost } = props;
+  const {
+    targetProduct,
+    userInfo,
+    handleAddCart,
+    handleAddPost,
+    handleConfirmPost,
+  } = props;
   const [cartAmount, setCartAmount] = useState(1);
   const [openLoginAlert, setOpenLoginAlert] = useState(false);
   const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
   const [tabValue, setTabValue] = useState("1");
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [commentValue, setCommentValue] = useState("");
+  const [ratingValue, setRatingValue] = useState(3);
+  const [openSuccessPostAlert, setOpenSuccessPostAlert] = useState(false);
 
   // console.log(targetProduct);
 
@@ -64,6 +90,17 @@ const ProductDetail = (props) => {
     setTabValue(newValue);
   };
 
+  const handleCloseCreatePost = () => setShowCreatePost(false);
+  const handleShowCreatePost = () => setShowCreatePost(true);
+
+  const handleCloseSuccessPost = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenLoginAlert(false);
+    setOpenSuccessPostAlert(false);
+  };
+
   return (
     <Box>
       <List
@@ -94,6 +131,122 @@ const ProductDetail = (props) => {
             Thêm vào giỏ hàng thành công
           </Alert>
         </Snackbar>
+        <Snackbar
+          open={openSuccessPostAlert}
+          autoHideDuration={6000}
+          onClose={handleCloseSuccessPost}
+        >
+          <Alert
+            onClose={handleCloseSuccessPost}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Tạo bài viết thành công
+          </Alert>
+        </Snackbar>
+        <Modal
+          show={showCreatePost}
+          onHide={(e) => {
+            handleCloseCreatePost();
+            setCommentValue("");
+          }}
+          dialogClassName="modal-lg"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Tạo bài viết</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Stack direction="row">
+              <Box
+                width="30%"
+                sx={{
+                  display: {
+                    xs: "none",
+                    md: "block",
+                  },
+                }}
+              >
+                <img
+                  src={targetProduct.photo_url[0]}
+                  alt={targetProduct.name}
+                  width="100%"
+                />
+              </Box>
+              <Box
+                pl={3}
+                sx={{
+                  width: {
+                    xs: "100%",
+                    md: "70%",
+                  },
+                }}
+              >
+                <Typography fontSize={20} fontWeight={700}>
+                  Tên sản phẩm: {targetProduct.name}
+                </Typography>
+                <Box mt={2}>
+                  <Typography fontSize={15} fontWeight={300}>
+                    Bình luận
+                  </Typography>
+                  <textarea
+                    value={commentValue}
+                    placeholder="Bạn nghĩ gì về sản phẩm này?"
+                    style={{
+                      padding: "10px",
+                      width: "100%",
+                      height: "100px",
+                    }}
+                    onChange={(e) => {
+                      setCommentValue(e.target.value);
+                    }}
+                  />
+                </Box>
+                <Box mt={2}>
+                  <Typography fontSize={15} fontWeight={300}>
+                    Đánh giá
+                  </Typography>
+                  <StyledRating
+                    name="simple-controlled"
+                    value={ratingValue}
+                    icon={<Favorite fontSize="inherit" />}
+                    emptyIcon={<FavoriteBorder fontSize="inherit" />}
+                    onChange={(event, newValue) => {
+                      setRatingValue(newValue);
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Stack>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={(e) => {
+                handleCloseCreatePost();
+                setCommentValue("");
+              }}
+            >
+              Đóng
+            </Button>
+            <Button
+              variant="primary"
+              onClick={(e) => {
+                handleConfirmPost(
+                  userInfo,
+                  targetProduct,
+                  commentValue,
+                  ratingValue,
+                  handleCloseCreatePost,
+                  setCommentValue,
+                  setRatingValue,
+                  setOpenSuccessPostAlert
+                );
+              }}
+            >
+              Tạo
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <ListItem divider>
           <Typography variant="h5" fontSize={20} fontWeight={700}>
             {targetProduct ? targetProduct.name : "unknown"} Figure
@@ -180,7 +333,7 @@ const ProductDetail = (props) => {
               variant="contained"
               color="success"
               onClick={(e) => {
-                handleAddPost(setOpenLoginAlert, setOpenSuccessAlert);
+                handleAddPost(setOpenLoginAlert, handleShowCreatePost);
               }}
             >
               Tạo bài viết

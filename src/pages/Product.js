@@ -18,6 +18,7 @@ const Product = (props) => {
     myLocation,
     handleAddCart,
     handleAddPost,
+    handleConfirmPost,
     loading,
     setLoading,
   } = props;
@@ -124,6 +125,7 @@ const Product = (props) => {
                   userInfo={userInfo}
                   handleAddCart={handleAddCart}
                   handleAddPost={handleAddPost}
+                  handleConfirmPost={handleConfirmPost}
                 />
               </Grid>
             </Grid>
