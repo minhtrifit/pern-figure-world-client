@@ -17,6 +17,9 @@ function App() {
   const [userInfo, setUserInfo] = useState({});
   const [productList, setProductList] = useState([]);
 
+  const [authToken, setAuthToken] = useState("");
+  const [userTokenInfo, setUserTokenInfo] = useState({});
+
   const [productListPerPage, setProductListPerPage] = useState([]);
   const [productListPageCount, setProductListPageCount] = useState(0);
   const productPerPage = 6;
@@ -59,10 +62,22 @@ function App() {
     return arr;
   };
 
-  const userStatus = async (data) => {
+  const userAuth = async (data) => {
     try {
-      await axios.post(
-        `${process.env.REACT_APP_SERVER_API}/users/status`,
+      await axios.post(`${process.env.REACT_APP_SERVER_API}/users/auth`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const userToken = async (data) => {
+    try {
+      const rs = await axios.post(
+        `${process.env.REACT_APP_SERVER_API}/users/login`,
         data,
         {
           headers: {
@@ -70,12 +85,38 @@ function App() {
           },
         }
       );
+
+      return rs.data;
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const getUserStatus = async (email) => {
+  const userVerifyToken = async (token) => {
+    try {
+      const data = {
+        token: token,
+      };
+      const rs = await axios.post(
+        `${process.env.REACT_APP_SERVER_API}/users/verify`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (rs.data.user) {
+        // return rs.data.user;
+        setUserTokenInfo(rs.data.user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const getUserByEmail = async (email) => {
   //   try {
   //     const rs = await axios.get(
   //       `${process.env.REACT_APP_SERVER_API}/users/${email}`
@@ -113,7 +154,8 @@ function App() {
   useEffect(() => {
     // If user login successfully
     if (user) {
-      const { uid, displayName, email, photoURL } = user;
+      const { uid, displayName, email, photoURL } = user; // Get user info from Firebase
+
       setUserInfo({ uid, displayName, email, photoURL });
       const data = { uid, displayName, email, photoURL };
 
@@ -121,14 +163,55 @@ function App() {
 
       // Change user status === true when first login (not change if refresh page)
       if (temp === null) {
-        console.log("User first login");
-        userStatus(data);
+        // console.log("User first login");
+
+        userAuth(data); // Call API to set User Auth
         localStorage.setItem("userLogin", true);
       }
 
       // console.log("Login successfully!");
     }
   }, [user]);
+
+  //==================== User Account Auth
+
+  useEffect(() => {
+    const checkToken = localStorage.getItem("token");
+
+    const getVerify = async (token) => {
+      userVerifyToken(token);
+    };
+
+    if (checkToken) {
+      setAuthToken(checkToken);
+      if (authToken) {
+        getVerify(authToken);
+
+        // Verify token successfully
+        if (Object.keys(userTokenInfo).length !== 0) {
+          // console.log(userTokenInfo);
+          setUserInfo(userTokenInfo);
+
+          const temp = localStorage.getItem("userLogin");
+
+          // Change user status === true when first login (not change if refresh page)
+          if (temp === null) {
+            // console.log("User first login");
+
+            userAuth(userTokenInfo); // Call API to set User Auth
+            localStorage.setItem("userLogin", true);
+          }
+        }
+      }
+    }
+
+    // Clean up token after verify successfully
+    return () => {
+      if (Object.keys(userTokenInfo).length !== 0) {
+        localStorage.removeItem("token");
+      }
+    };
+  }, [authToken, userTokenInfo]);
 
   //==================== API Calling
   useEffect(() => {
@@ -199,9 +282,31 @@ function App() {
     signInWithPopup(auth, provider);
   };
 
+  const handleSignInWithAccount = async (email, password) => {
+    try {
+      const data = {
+        email: email,
+        password: password,
+      };
+      const rs = await userToken(data);
+      const { token } = rs;
+
+      if (token) {
+        console.log(token);
+        localStorage.setItem("token", token);
+        window.location = "/";
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleLogOut = () => {
-    signOut(auth);
-    userStatus(userInfo);
+    // If user login with firebase auth
+    if (auth) {
+      signOut(auth);
+    }
+    userAuth(userInfo); // Set User status = false
     setUserInfo("");
     localStorage.removeItem("userLogin");
     // console.log("Log out successfully!");
@@ -339,7 +444,7 @@ function App() {
       setCartDetailList([]);
       setTotalCart(0);
 
-      console.log(cartList);
+      // console.log(cartList);
     } catch (error) {
       console.log(error);
     }
@@ -379,6 +484,7 @@ function App() {
             <UserLogin
               userInfo={userInfo}
               handleSignInWithGoogle={handleSignInWithGoogle}
+              handleSignInWithAccount={handleSignInWithAccount}
             />
           }
         />

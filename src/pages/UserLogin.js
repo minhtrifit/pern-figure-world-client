@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Box,
@@ -15,7 +15,10 @@ import { Google, Facebook } from "@mui/icons-material";
 import MyFooter from "../components/MyFooter";
 
 const UserLogin = (props) => {
-  const { userInfo, handleSignInWithGoogle } = props;
+  const { userInfo, handleSignInWithGoogle, handleSignInWithAccount } = props;
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+
   return (
     <>
       {Object.keys(userInfo).length !== 0 ? (
@@ -66,7 +69,7 @@ const UserLogin = (props) => {
               }}
             >
               <Box
-                bgcolor="red"
+                // bgcolor="red"
                 // mr={3}
                 sx={{
                   width: "300px",
@@ -133,17 +136,28 @@ const UserLogin = (props) => {
                       spacing={2}
                       mb={3}
                     >
-                      <TextField label="Tên tài khoản" variant="outlined" />
+                      <TextField
+                        label="Tên tài khoản"
+                        variant="outlined"
+                        value={userEmail}
+                        onChange={(e) => {
+                          setUserEmail(e.target.value);
+                        }}
+                      />
                       <TextField
                         label="Mật khẩu"
                         type="password"
                         variant="outlined"
+                        value={userPassword}
+                        onChange={(e) => {
+                          setUserPassword(e.target.value);
+                        }}
                       />
                       <Button
                         variant="contained"
                         color="warning"
                         onClick={(e) => {
-                          // handleSignInWithGoogle();
+                          handleSignInWithAccount(userEmail, userPassword);
                         }}
                       >
                         <Typography ml={2}>Đăng nhập</Typography>
