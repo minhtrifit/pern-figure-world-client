@@ -16,6 +16,8 @@ function App() {
   const [user] = useAuthState(auth);
   const [userInfo, setUserInfo] = useState({});
   const [userDetail, setUserDetail] = useState({});
+  const [allUserList, setAllUserList] = useState([]);
+
   const [productList, setProductList] = useState([]);
 
   const [authToken, setAuthToken] = useState("");
@@ -36,6 +38,9 @@ function App() {
   const [cartDetailList, setCartDetailList] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [forumLoading, setForumLoading] = useState(true);
+
+  const [postList, setPostList] = useState([]);
 
   //==================== Function declair
   const getRandomID = (min, max) => {
@@ -155,20 +160,17 @@ function App() {
     return Math.ceil(length / value);
   };
 
-  // const getAccountUser = async () => {
-  //   try {
-  //     const rs = await axios.get(
-  //       `${process.env.REACT_APP_SERVER_API}/users/account`
-  //     );
-  //     const data = rs.data;
-  //     if (data.userList) {
-  //       console.log(data.userList);
-  //       // setAccountList(data.userList);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const getAllUser = async () => {
+    try {
+      const rs = await axios.get(`${process.env.REACT_APP_SERVER_API}/users`);
+      const data = rs.data;
+      if (data.data) {
+        setAllUserList(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const createNewPost = async (data) => {
     try {
@@ -181,6 +183,16 @@ function App() {
           },
         }
       );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllPosts = async () => {
+    try {
+      const rs = await axios.get(`${process.env.REACT_APP_SERVER_API}/posts`);
+      const data = rs.data;
+      setPostList(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -283,6 +295,15 @@ function App() {
     }
   }, [myLocation, userInfo, getUserByEmailCallBack]);
 
+  useEffect(() => {
+    const { pathname } = myLocation;
+
+    if (pathname === "/forum") {
+      getAllPosts();
+      getAllUser();
+    }
+  }, [myLocation, userInfo]);
+
   //==================== Route handling
 
   // Product view per page handle
@@ -294,7 +315,7 @@ function App() {
     }
   }, [myLocation, productList]);
 
-  //==================== Loading handling
+  //==================== Product loading handling
 
   useEffect(() => {
     const { pathname } = myLocation;
@@ -313,6 +334,23 @@ function App() {
       setLoading(true);
     }
   }, [myLocation, loading]);
+
+  //==================== Forum loading handling
+
+  useEffect(() => {
+    const { pathname } = myLocation;
+
+    // Add pathname below this comment if want loading animation...
+    if (pathname === "/forum") {
+      if (forumLoading) {
+        setTimeout(() => {
+          setForumLoading(false);
+        }, 2000);
+      }
+    } else {
+      setForumLoading(true);
+    }
+  }, [myLocation, forumLoading]);
 
   //==================== Event handling
   const handleSignInWithGoogle = () => {
@@ -569,7 +607,19 @@ function App() {
         />
         <Route
           path="/forum"
-          element={<Forum userInfo={userInfo} userDetail={userDetail} />}
+          element={
+            <Forum
+              userInfo={userInfo}
+              userDetail={userDetail}
+              productList={productList}
+              randomUniqueArray={randomUniqueArray}
+              getRandomID={getRandomID}
+              handleViewProductDetail={handleViewProductDetail}
+              forumLoading={forumLoading}
+              postList={postList}
+              allUserList={allUserList}
+            />
+          }
         />
         <Route
           path="/product/:id"

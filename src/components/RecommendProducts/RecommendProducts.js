@@ -21,7 +21,7 @@ const RecommendProducts = (props) => {
       <Swiper
         navigation={true}
         modules={[Pagination, Navigation]}
-        className="mySwiper"
+        className="mySwiper2"
         spaceBetween={10}
         pagination={{
           type: "progressbar",
