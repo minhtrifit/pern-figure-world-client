@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -15,6 +15,7 @@ import Pay from "./pages/Pay";
 function App() {
   const [user] = useAuthState(auth);
   const [userInfo, setUserInfo] = useState({});
+  const [userDetail, setUserDetail] = useState({});
   const [productList, setProductList] = useState([]);
 
   const [authToken, setAuthToken] = useState("");
@@ -116,17 +117,21 @@ function App() {
     }
   };
 
-  // const getUserByEmail = async (email) => {
-  //   try {
-  //     const rs = await axios.get(
-  //       `${process.env.REACT_APP_SERVER_API}/users/${email}`
-  //     );
-  //     const data = rs.data;
-  //     return data.data.status;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const getUserByEmail = async (email) => {
+    try {
+      const rs = await axios.get(
+        `${process.env.REACT_APP_SERVER_API}/users/${email}`
+      );
+      const data = rs.data;
+      setUserDetail(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getUserByEmailCallBack = useCallback((email) => {
+    getUserByEmail(email);
+  }, []);
 
   const getProductList = async () => {
     try {
@@ -261,16 +266,22 @@ function App() {
       document.title = "Figure World | Chi tiết sản phẩm";
     } else if (pathname === "/pay") {
       document.title = "Figure World | Thanh toán";
+    } else if (pathname === "/forum") {
+      document.title = "Figure World | Diễn đàn";
     } else if (pathname === "/") {
       document.title = "Figure World";
     }
   }, [myLocation]);
 
-  // useEffect(() => {
-  //   if (cartList.length !== 0) {
-  //     console.log(cartList);
-  //   }
-  // }, [cartList]);
+  //==================== Forum API Calling
+
+  useEffect(() => {
+    const { pathname } = myLocation;
+
+    if (pathname === "/forum" && Object.keys(userInfo).length !== 0) {
+      getUserByEmailCallBack(userInfo.email);
+    }
+  }, [myLocation, userInfo, getUserByEmailCallBack]);
 
   //==================== Route handling
 
@@ -556,7 +567,10 @@ function App() {
             />
           }
         />
-        <Route path="/forum" element={<Forum />} />
+        <Route
+          path="/forum"
+          element={<Forum userInfo={userInfo} userDetail={userDetail} />}
+        />
         <Route
           path="/product/:id"
           element={

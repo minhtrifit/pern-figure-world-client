@@ -28,11 +28,19 @@ const RecommendProducts = (props) => {
           clickable: true,
         }}
         breakpoints={{
-          600: {
+          640: {
             slidesPerView: 2,
             spaceBetween: 20,
           },
-          1024: {
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 40,
+          },
+          1070: {
+            slidesPerView: 4,
+            spaceBetween: 40,
+          },
+          1366: {
             slidesPerView: 5,
             spaceBetween: 50,
           },
