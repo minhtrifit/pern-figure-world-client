@@ -308,7 +308,7 @@ const Forum = (props) => {
                 // }}
               >
                 <Stack spacing={3}>
-                  <Paper>
+                  <Paper elevation={2}>
                     <Box p={2}>
                       <Stack direction="row" spacing={3}>
                         <Avatar
@@ -352,7 +352,7 @@ const Forum = (props) => {
                       );
 
                       return (
-                        <Paper key={getRandomID(10000, 99999)}>
+                        <Paper elevation={2} key={getRandomID(10000, 99999)}>
                           <Box p={2}>
                             <Stack direction="row" alignItems="center">
                               <Avatar
@@ -435,6 +435,8 @@ const Forum = (props) => {
                         width: "100%",
                         height: "100%",
                         borderRadius: "10px",
+                        boxShadow:
+                          "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
                       }}
                     />
                   </Box>
