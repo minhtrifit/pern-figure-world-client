@@ -29,6 +29,7 @@ const MyNav = (props) => {
     handleCartPay,
     handleViewProductDetail,
     getCartByUser,
+    getPostByUser,
   } = props;
 
   let navigate = useNavigate();
@@ -135,6 +136,7 @@ const MyNav = (props) => {
                           to="/profile"
                           onClick={(e) => {
                             getCartByUser();
+                            getPostByUser();
                           }}
                         >
                           Trang cá nhân

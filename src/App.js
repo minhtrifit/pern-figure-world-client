@@ -43,6 +43,7 @@ function App() {
   const [forumLoading, setForumLoading] = useState(true);
 
   const [postList, setPostList] = useState([]);
+  const [userPost, setUserPost] = useState([]);
 
   //==================== Function declair
   const getRandomID = (min, max) => {
@@ -210,7 +211,7 @@ function App() {
           return item.user_email === userInfo.email;
         });
 
-        setUserCart(sortCart);
+        // setUserCart(sortCart);
 
         if (sortCart && productList) {
           let tempCart = [];
@@ -232,6 +233,47 @@ function App() {
           }
 
           setUserCart(tempCart);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPostByUser = async () => {
+    try {
+      const rs = await axios.get(`${process.env.REACT_APP_SERVER_API}/posts`);
+      const data = rs.data.data;
+
+      if (Object.keys(userInfo).length !== 0) {
+        const sortPost = data.filter((item) => {
+          return item.user_email === userInfo.email;
+        });
+
+        if (sortPost) {
+          let tempPost = [];
+          for (var i = 0; i < sortPost.length; ++i) {
+            for (var j = 0; j < productList.length; ++j) {
+              if (
+                sortPost[i].user_email === userInfo.email &&
+                sortPost[i].product_id === productList[j].id
+              ) {
+                console.log(sortPost[i]);
+                const post = {
+                  user_email: sortPost[i].user_email,
+                  displayName: userInfo.displayName,
+                  photoURL: userInfo.photoURL,
+                  rating: sortPost[i].rating,
+                  content: sortPost[i].content,
+                  date: sortPost[i].date.split("T"),
+                  product_info: productList[j],
+                };
+                tempPost.push(post);
+              }
+            }
+          }
+          // console.log(tempPost);
+          setUserPost(tempPost);
         }
       }
     } catch (error) {
@@ -625,6 +667,7 @@ function App() {
         handleCartPay={handleCartPay}
         handleViewProductDetail={handleViewProductDetail}
         getCartByUser={getCartByUser}
+        getPostByUser={getPostByUser}
       />
       <Routes>
         <Route
@@ -708,6 +751,7 @@ function App() {
               userCart={userCart}
               getRandomID={getRandomID}
               handleViewProductDetail={handleViewProductDetail}
+              userPost={userPost}
             />
           }
         />

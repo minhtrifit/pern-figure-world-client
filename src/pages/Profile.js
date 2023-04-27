@@ -8,9 +8,12 @@ import {
   Tabs,
   Tab,
   Button,
+  Rating,
+  styled,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 import MyFooter from "../components/MyFooter";
 
@@ -47,6 +50,15 @@ function a11yProps(index) {
   };
 }
 
+const StyledRating = styled(Rating)({
+  "& .MuiRating-iconFilled": {
+    color: "#ff6d75",
+  },
+  "& .MuiRating-iconHover": {
+    color: "#ff3d47",
+  },
+});
+
 const Profile = (props) => {
   const {
     userInfo,
@@ -54,6 +66,7 @@ const Profile = (props) => {
     userCart,
     getRandomID,
     handleViewProductDetail,
+    userPost,
   } = props;
 
   const [value, setValue] = useState(0);
@@ -62,6 +75,8 @@ const Profile = (props) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  console.log(userPost);
 
   return (
     <>
@@ -187,7 +202,72 @@ const Profile = (props) => {
               })}
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Two
+            {userPost &&
+              userPost.map((item) => {
+                return (
+                  <Box key={getRandomID(10000, 99999)} mt={2}>
+                    <Stack direction="row">
+                      <Avatar alt={item.displayName} src={item.photoURL} />
+                      <Typography
+                        variant="p"
+                        fontSize={18}
+                        fontWeight={500}
+                        ml={2}
+                        mt={1}
+                      >
+                        {item.displayName}
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row">
+                      <Box
+                        mt={2}
+                        sx={{
+                          width: "20%",
+                        }}
+                      >
+                        <img
+                          alt={item.product_info.name}
+                          src={item.product_info.photo_url[0]}
+                          style={{ width: "100%" }}
+                        />
+                      </Box>
+                      <Box
+                        mt={2}
+                        pl={2}
+                        sx={{
+                          width: "80%",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Typography variant="p" fontSize={20} fontWeight={700}>
+                          {item.product_info.name}
+                        </Typography>
+                        <Typography variant="p" fontSize={18} mt={2}>
+                          {item.content}
+                        </Typography>
+                        <StyledRating
+                          value={item.rating}
+                          icon={<Favorite fontSize="inherit" />}
+                          emptyIcon={<FavoriteBorder fontSize="inherit" />}
+                        />
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "150px",
+                            margin: "20px 0",
+                          }}
+                          onClick={(e) => {
+                            handleViewProductDetail(item.product_info.id);
+                          }}
+                        >
+                          Xem chi tiết
+                        </Button>
+                      </Box>
+                    </Stack>
+                  </Box>
+                );
+              })}
           </TabPanel>
         </Box>
       </Paper>
