@@ -11,6 +11,7 @@ import UserLogin from "./pages/UserLogin";
 import Forum from "./pages/Forum";
 import Product from "./pages/Product";
 import Pay from "./pages/Pay";
+import Profile from "./pages/Profile";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -34,6 +35,7 @@ function App() {
 
   const [cartList, setCartList] = useState([]);
   const [totalCart, setTotalCart] = useState(0);
+  const [userCart, setUserCart] = useState([]);
   const [showCartModal, setShowCartModal] = useState(false);
   const [cartDetailList, setCartDetailList] = useState([]);
 
@@ -198,6 +200,45 @@ function App() {
     }
   };
 
+  const getCartByUser = async () => {
+    try {
+      const rs = await axios.get(`${process.env.REACT_APP_SERVER_API}/carts`);
+      const data = rs.data.data;
+
+      if (Object.keys(userInfo).length !== 0) {
+        const sortCart = data.filter((item) => {
+          return item.user_email === userInfo.email;
+        });
+
+        setUserCart(sortCart);
+
+        if (sortCart && productList) {
+          let tempCart = [];
+          for (var i = 0; i < sortCart.length; ++i) {
+            for (var j = 0; j < productList.length; ++j) {
+              if (sortCart[i].product_id === productList[j].id) {
+                const cart = {
+                  cart_id: sortCart[i].order_id,
+                  product_id: productList[j].id,
+                  name: productList[j].name,
+                  photoURL: productList[j].photo_url[0],
+                  price: productList[j].price,
+                  amount: sortCart[i].amount,
+                  date: sortCart[i].date.split("T"),
+                };
+                tempCart.push(cart);
+              }
+            }
+          }
+
+          setUserCart(tempCart);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //==================== User Auth
   useEffect(() => {
     // If user login successfully
@@ -291,6 +332,10 @@ function App() {
     const { pathname } = myLocation;
 
     if (pathname === "/forum" && Object.keys(userInfo).length !== 0) {
+      getUserByEmailCallBack(userInfo.email);
+    }
+
+    if (pathname === "/profile" && Object.keys(userInfo).length !== 0) {
       getUserByEmailCallBack(userInfo.email);
     }
   }, [myLocation, userInfo, getUserByEmailCallBack]);
@@ -579,6 +624,7 @@ function App() {
         handleDeleteCartItem={handleDeleteCartItem}
         handleCartPay={handleCartPay}
         handleViewProductDetail={handleViewProductDetail}
+        getCartByUser={getCartByUser}
       />
       <Routes>
         <Route
@@ -650,6 +696,18 @@ function App() {
               getRandomID={getRandomID}
               handleConfirmCart={handleConfirmCart}
               getDay={getDay}
+            />
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <Profile
+              userInfo={userInfo}
+              userDetail={userDetail}
+              userCart={userCart}
+              getRandomID={getRandomID}
+              handleViewProductDetail={handleViewProductDetail}
             />
           }
         />

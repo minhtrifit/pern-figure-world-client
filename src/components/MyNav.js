@@ -28,6 +28,7 @@ const MyNav = (props) => {
     handleDeleteCartItem,
     handleCartPay,
     handleViewProductDetail,
+    getCartByUser,
   } = props;
 
   let navigate = useNavigate();
@@ -129,15 +130,21 @@ const MyNav = (props) => {
                     <Dropdown align={{ md: "end" }}>
                       <Dropdown.Toggle variant="link"></Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item as={Link} to="/profile">
+                        <Dropdown.Item
+                          as={Link}
+                          to="/profile"
+                          onClick={(e) => {
+                            getCartByUser();
+                          }}
+                        >
                           Trang cá nhân
                         </Dropdown.Item>
-                        <Dropdown.Item as={Link} to="/carts">
+                        {/* <Dropdown.Item as={Link} to="/carts">
                           Lịch sử mua hàng
                         </Dropdown.Item>
                         <Dropdown.Item as={Link} to="/posts">
                           Danh sách bài viết
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                       </Dropdown.Menu>
                     </Dropdown>
                   </ButtonGroup>
