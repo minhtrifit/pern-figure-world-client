@@ -30,6 +30,9 @@ const MyNav = (props) => {
     handleViewProductDetail,
     getCartByUser,
     getPostByUser,
+    searchProduct,
+    setSearchProduct,
+    handleSearchProduct,
   } = props;
 
   let navigate = useNavigate();
@@ -104,8 +107,17 @@ const MyNav = (props) => {
                   placeholder="Tìm kiếm"
                   className="me-2"
                   aria-label="Search"
+                  value={searchProduct}
+                  onChange={(e) => {
+                    setSearchProduct(e.target.value);
+                  }}
                 />
-                <Button variant="outline-primary">
+                <Button
+                  variant="outline-primary"
+                  onClick={(e) => {
+                    handleSearchProduct();
+                  }}
+                >
                   <Search />
                 </Button>
               </Form>

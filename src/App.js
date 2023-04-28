@@ -12,6 +12,7 @@ import Forum from "./pages/Forum";
 import Product from "./pages/Product";
 import Pay from "./pages/Pay";
 import Profile from "./pages/Profile";
+import Search from "./pages/Search";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -20,6 +21,8 @@ function App() {
   const [allUserList, setAllUserList] = useState([]);
 
   const [productList, setProductList] = useState([]);
+  const [searchProduct, setSearchProduct] = useState("");
+  const [searchProductList, setSearchProductList] = useState([]);
 
   const [authToken, setAuthToken] = useState("");
   const [userTokenInfo, setUserTokenInfo] = useState({});
@@ -649,6 +652,16 @@ function App() {
     }
   };
 
+  const handleSearchProduct = () => {
+    const productSearch = productList.filter((item) => {
+      return item.name.toUpperCase().includes(searchProduct.toUpperCase());
+    });
+
+    setSearchProductList(productSearch);
+
+    navigate("/search");
+  };
+
   //==================== Main function component
 
   return (
@@ -668,6 +681,9 @@ function App() {
         handleViewProductDetail={handleViewProductDetail}
         getCartByUser={getCartByUser}
         getPostByUser={getPostByUser}
+        searchProduct={searchProduct}
+        setSearchProduct={setSearchProduct}
+        handleSearchProduct={handleSearchProduct}
       />
       <Routes>
         <Route
@@ -752,6 +768,17 @@ function App() {
               getRandomID={getRandomID}
               handleViewProductDetail={handleViewProductDetail}
               userPost={userPost}
+            />
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <Search
+              searchProduct={searchProduct}
+              searchProductList={searchProductList}
+              getRandomID={getRandomID}
+              handleViewProductDetail={handleViewProductDetail}
             />
           }
         />
