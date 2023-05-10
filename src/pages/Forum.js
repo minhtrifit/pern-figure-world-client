@@ -47,7 +47,9 @@ const Forum = (props) => {
 
   let navigate = useNavigate();
 
-  // console.log(postList);
+  // if (Object.keys(userDetail).length !== 0) {
+  //   console.log(userDetail);
+  // }
 
   //==================== Get target product for each post
 
@@ -311,10 +313,13 @@ const Forum = (props) => {
                   <Paper elevation={2}>
                     <Box p={2}>
                       <Stack direction="row" spacing={3}>
-                        <Avatar
-                          alt={userDetail.display_name}
-                          src={userDetail.photo_url}
-                        />
+                        {Object.keys(userDetail).length !== 0 && (
+                          <Avatar
+                            alt={userDetail.display_name}
+                            src={userDetail.photo_url}
+                          />
+                        )}
+
                         <InputGroup className="mb-3">
                           <Form.Control
                             placeholder="Tạo bài viết về ý kiến của bạn?"
@@ -355,13 +360,21 @@ const Forum = (props) => {
                         <Paper elevation={2} key={getRandomID(10000, 99999)}>
                           <Box p={2}>
                             <Stack direction="row" alignItems="center">
-                              <Avatar
-                                alt={targetUser.uid}
-                                src={targetUser.photo_url}
-                              />
-                              <Typography ml={2} fontSize={15} fontWeight={700}>
-                                {targetUser.display_name}
-                              </Typography>
+                              {Object.keys(targetUser || {}).length !== 0 && (
+                                <>
+                                  <Avatar
+                                    alt={targetUser.uid}
+                                    src={targetUser.photo_url}
+                                  />
+                                  <Typography
+                                    ml={2}
+                                    fontSize={15}
+                                    fontWeight={700}
+                                  >
+                                    {targetUser.display_name}
+                                  </Typography>
+                                </>
+                              )}
                             </Stack>
                             <Stack direction="row" mt={2} spacing={2}>
                               <Box
