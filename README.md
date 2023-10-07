@@ -74,5 +74,5 @@ $ npm run start
 
 ## Stay in touch
 
-- Author - [minhtrifit](https://kamilmysliwiec.com)
+- Author - [minhtrifit](https://github.com/minhtrifit)
 - Github - [https://github.com/minhtrifit](https://github.com/minhtrifit)
