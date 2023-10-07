@@ -70,7 +70,7 @@ $ npm run start
 
 ![Forum](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662540/Figure%20Word/showcase/forum2_exlbkw.png)
 
-## Mote: [Youtube demo video](https://www.youtube.com/watch?v=7dAkC-3clqM)
+## More: [Youtube demo video](https://www.youtube.com/watch?v=7dAkC-3clqM)
 
 ## Stay in touch
 
