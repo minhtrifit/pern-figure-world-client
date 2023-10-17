@@ -40,11 +40,16 @@ $ npm run start
 
 ## Login Page:
 
+* Firebase authentication service
+
 ![Login](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662519/Figure%20Word/showcase/login_i5zeb1.png)
 
 ***
 
 ## Home Page:
+
+* View product list per page.
+* Searching for detail product.
 
 ![Login](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662542/Figure%20Word/showcase/home_wft73y.png)
 
@@ -55,6 +60,9 @@ $ npm run start
 ***
 
 ## Product Detail Page:
+
+* Show all description of product.
+* User can buy, create post for product.
 
 ![Detail](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662520/Figure%20Word/showcase/detail_txsak0.png)
 
@@ -68,6 +76,8 @@ $ npm run start
 
 ## Product Cart Page:
 
+* Show all product that user want to buy.
+
 ![Cart](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662519/Figure%20Word/showcase/cart_wxehg6.png)
 
 ![Cart](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662519/Figure%20Word/showcase/cart2_bwth71.png)
@@ -76,11 +86,15 @@ $ npm run start
 
 ## Voting Product Page:
 
+* User create comment, voting about the product.
+
 ![Cart](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662520/Figure%20Word/showcase/vote_jn8rhp.png)
 
 ***
 
 ## Forum Page:
+
+* View all user posts.
 
 ![Forum](https://res.cloudinary.com/dn2h31tcb/image/upload/v1696662540/Figure%20Word/showcase/forum_euqhrb.png)
 
