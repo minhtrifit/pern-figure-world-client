@@ -1,5 +1,9 @@
 > # FIGURE WORLD DOCUMENTATION
 
+<img src="https://img.shields.io/github/stars/minhtrifit/pern-figure-world-client"/> ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/minhtrifit/pern-figure-world-client)
+
+![Thumbnail](https://res.cloudinary.com/dn2h31tcb/image/upload/v1711519394/project-assets/figure-world/1_uxrsss.png)
+
 ## Server repo
 
 - Follow FigureWorld server repo - [github](https://github.com/minhtrifit/pern-figure-world-server)
